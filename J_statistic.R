@@ -36,7 +36,7 @@ opt_parser = OptionParser(option_list=option_list, add_help_option=FALSE);
 opt = parse_args(opt_parser)
 
 # CHECK: Mandatory SNP argument
-if(is.null(opt$snv)) { 
+if(is.null(opt$snp)) { 
   stop("Missing: Absolute file path of SNP calls (CSV file).")
 }
 
@@ -52,7 +52,7 @@ if(is.null(opt$output)) {
 
 cat("Stage 1: Setup user-input parameters.\n")
 
-calls = read.csv(opt$snv,check.names=FALSE)
+calls = read.csv(opt$snp,check.names=FALSE)
 cnvsData = read.csv(opt$cnv,check.names=FALSE)
 output_directory = opt$output
 numRuns = opt$nrun

@@ -1,0 +1,13 @@
+SNP_mDIV_A1.SNP09_319_111109
+Chromosome
+17
+ p.KS.unadjusted p.CvM.unadjusted     rejection.KS    rejection.CvM 
+      0.09090909       0.09090909       0.00000000       0.00000000 
+p.J.unadjusted    rejection.J 
+    0.09090909     0.00000000 
+%Hetero
+0.141132
+numCNVs
+2
+Association
+/
