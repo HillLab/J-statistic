@@ -46,7 +46,7 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 
 The `J_statistic.R` converts the input SNP and CNV data files into a single processed file, then tests for statistical association between SNPs and CNVs and output the statistical results as a summary Excel file with associated plots. 
 
-Using the example input data found at `./example/input`, `J_statistic.R` run using the following command in terminal will produce the output found at `./example/output':
+Using the example input data found at `./example/input`, `J_statistic.R` run using the following command in terminal will produce the output found at `./example/output`:
 
 `cd [Directory where J-statistic.R is located]`
 
