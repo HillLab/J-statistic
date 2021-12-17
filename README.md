@@ -14,7 +14,7 @@ Thus, the J-statistic approach aims to infer whether the existence of CNVs could
 
 J-statistic is freely available on [GitHub](https://github.com/HillLab/J-statistic). Installation requires [git](https://git-scm.com/) and [git lfs](https://git-lfs.github.com/) installed. 
 
-Install J-statistic to your working directory using the follow command in a terminal.
+Install J-statistic to your working directory using the following command in a terminal.
 
 ```sh
 git clone https://github.com/HillLab/J-statistic
@@ -31,6 +31,8 @@ J-statistic has the following dependencies:
 
 ## Usage
 
+Summary of the different arguments that J-statistic.R uses as input. The script will output summary statistics for each chromosome of each individual microarray, along with Rainbow plots, Rainfall plots, and J function plots.
+
 Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Description | Argument Range 
 --- | --- | --- | --- | ---
 -s | --snp | Character | Absolute file path of SNP calls (CSV file) |
@@ -41,6 +43,14 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 -x | --seed | Integer | Number of bootstrap simulations |  Default:12345
 
 ## Tutorial
+
+The `J_statistic.R` converts the input SNP and CNV data files into a single processed file, then tests for statistical association between SNPs and CNVs and output the statistical results as a summary Excel file with associated plots. 
+
+Using the example input data found at `./example/input`, `J_statistic.R` run using the following command in terminal will produce the output found at `./example/output':
+
+`cd [Directory where J-statistic.R is located]`
+
+`Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/output --nrun 10 --het 10 --seed 1`
 
 ## Structure of J-statistic package
 <pre>
@@ -54,7 +64,7 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 │   └── input                                                                     // Directory containing example input SNP and CNV files. 
 │   │   └── example_CNV.csv                                                       // Example SNP file used as input into J-statistic script. 
 │   │   └── example_SNP.csv                                                       // Example CNV file used as input into J-statistic script. 
-│   └── output                                                                    // Directory containing example output summary statistics and Rainfall, Rainbow, and J-statistic plots. 
+│   └── output                                                                    // Directory containing example output summary statistics and Rainfall, Rainbow, and J function plots. 
 │   │   └── SNP_mDIV_A1.SNP09_319_111109                                          // Directory containing summary statistics and plots for one microarray. 
 │   │   └── SNP_mDIV_A1.SNP09_319_111109.csv                                      // Processed data combining SNP and CNV input files. 
 ├── J_statistic.R                                                                 // J-statistic R script. 
