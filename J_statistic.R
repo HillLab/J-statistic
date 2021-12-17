@@ -19,8 +19,8 @@ library(rowr)
 ######################################
 
 option_list = list(
-  make_option(c("-s", "--snv"), type="character", default=NULL, 
-              help="Absolute file path of SNV calls (CSV file).", metavar="SNV_CALL_FILE_PATH"),
+  make_option(c("-s", "--snp"), type="character", default=NULL, 
+              help="Absolute file path of SNP calls (CSV file).", metavar="SNP_CALL_FILE_PATH"),
   make_option(c("-c", "--cnv"), type="character", default=NULL, 
               help="Absolute file path of CNV calls (CSV file).", metavar="CNV_CALL_FILE_PATH"),
   make_option(c("-o", "--output"), type="character", default=NULL, 
@@ -35,9 +35,9 @@ option_list = list(
 opt_parser = OptionParser(option_list=option_list, add_help_option=FALSE);
 opt = parse_args(opt_parser)
 
-# CHECK: Mandatory SNV argument
+# CHECK: Mandatory SNP argument
 if(is.null(opt$snv)) { 
-  stop("Missing: Absolute file path of SNV calls (CSV file).")
+  stop("Missing: Absolute file path of SNP calls (CSV file).")
 }
 
 # CHECK: Mandatory CNV argument
