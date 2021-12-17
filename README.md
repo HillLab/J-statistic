@@ -27,10 +27,10 @@ J-statistic has the following dependencies:
 
 ## Structure of J-statistic package
 
-├── README.md                                                                     // README. 
-├── LICENSE                                                                       // Copy of the Creative Commons Attribution 4.0 License (CC BY). 
-├── requirements.txt                                                              // List of package dependencies.   
-├── data                                                                          // Directory containing 2 reference datasets. 
+├── README.md                                                                     // README. \
+├── LICENSE                                                                       // Copy of the Creative Commons Attribution 4.0 License (CC BY). \
+├── requirements.txt                                                              // List of package dependencies.   \
+├── data                                                                          // Directory containing 2 reference datasets. \
 │   └── GGG.csv                                                                   // Reference dataset. 
 │   └── SNP cluster detection - SNP CNV association test - FUNCTION v4.RData      // Reference dataset. 
 ├── example                                                                       // Directory containing example input and output files. 
