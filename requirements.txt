@@ -1,0 +1,5 @@
+R == 4.1.2
+devtools == 2.4.3
+intervals == 0.15.2
+optparse == 1.7.1
+rowr

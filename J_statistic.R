@@ -26,7 +26,7 @@ option_list = list(
   make_option(c("-o", "--output"), type="character", default=NULL, 
               help="Absolute file path of output directory.", metavar="OUTPUT_DIRECTORY_FILE_PATH"),
   make_option(c("-n", "--nrun"), type="integer", default=10, 
-              help="Number of permutation runs/", metavar="NUMBER_OF_RUNS"),
+              help="Number of bootstrap simulations/", metavar="NUMBER_OF_RUNS"),
   make_option(c("-h", "--het"), type="integer", default=10, 
               help="Minimum number of heterozygous SNVs.", metavar="MIN_NUMBER_OF_SNVS"),
   make_option(c("-x", "--seed"), type="integer", default=12345, 
