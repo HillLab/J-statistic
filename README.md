@@ -2,6 +2,14 @@
 
 ## Scope
 
+J-statistic is an easy-to-use statistical pipeline designed to infer associations between different mutation types, including but not limited to single nucleotide polymorphisms (SNP) and copy number variations (CNV) observed from the microarray platform. This R package applies the J-statistic to test the following null hypotheses:
+
+1. SNP differences outside of CNV regions follow complete spatial randomness.
+2. SNP differences outside of CNV regions have similar properties in clearly defined CNV nearby regions as for regions further away.
+3. SNP differences outside of CNV regions have similar properties everywhere on the chromosome.
+
+Thus, the J-statistic approach aims to infer whether the existence of CNVs could influence the spacing of SNP differences outside of CNVs or whether there tend to be more or less SNP differences in regions near the CNVs compared to those farther away. 
+
 ## Installation
 
 J-statistic is freely available on [GitHub](https://github.com/HillLab/J-statistic). Installation requires [git](https://git-scm.com/) and [git lfs](https://git-lfs.github.com/) installed. 
