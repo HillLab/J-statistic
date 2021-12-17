@@ -31,14 +31,19 @@ J-statistic has the following dependencies:
 
 ## Usage
 
-### Short-Form Argument | Long-Form Argument | Object Type | Description | Range 
---- | --- | --- | --- | --- 
+Short-Form Argument | Long-Form Argument | Object Type | Description | Range |
+--- | --- | --- | --- | 
 -s | --snp | Character | Absolute file path of SNP calls (CSV file) |
 --- | --- | --- | --- | --- 
 -c | --cnv | Character | Absolute file path of CNV calls (CSV file) |  
 --- | --- | --- | --- | --- 
 -o | --output | Character | Absolute file path of output directory |  
-
+--- | --- | --- | --- | --- 
+-n | --nrun | Integer | Number of bootstrap simulations |  Default:10 ; Recommended Range: 10-100
+--- | --- | --- | --- | --- 
+-h | --het | Integer | Minimum number of heterozygous SNPs |  Default:10 ; Recommended Range: 10-100
+--- | --- | --- | --- | --- 
+-x | --seed | Integer | Number of bootstrap simulations |  Default:12345
 
 ## Tutorial
 
@@ -52,11 +57,11 @@ J-statistic has the following dependencies:
 │   └── SNP cluster detection - SNP CNV association test - FUNCTION v4.RData      // Reference dataset. 
 ├── example                                                                       // Directory containing example input and output files. 
 │   └── input                                                                     // Directory containing example input SNP and CNV files. 
-│   │.  └── example_CNV.csv                                                       // Example SNP file used as input into J-statistic script. 
-│   │.  └── example_SNP.csv                                                       // Example CNV file used as input into J-statistic script. 
+│   │   └── example_CNV.csv                                                       // Example SNP file used as input into J-statistic script. 
+│   │   └── example_SNP.csv                                                       // Example CNV file used as input into J-statistic script. 
 │   └── output                                                                    // Directory containing example output summary statistics and Rainfall, Rainbow, and J-statistic plots. 
-│   │.  └── SNP_mDIV_A1.SNP09_319_111109                                          // Directory containing summary statistics and plots for one microarray. 
-│   │.  └── SNP_mDIV_A1.SNP09_319_111109.csv                                      // Processed data combining SNP and CNV input files. 
+│   │   └── SNP_mDIV_A1.SNP09_319_111109                                          // Directory containing summary statistics and plots for one microarray. 
+│   │   └── SNP_mDIV_A1.SNP09_319_111109.csv                                      // Processed data combining SNP and CNV input files. 
 ├── J_statistic.R                                                                 // J-statistic R script. 
 </pre>
 ## License
