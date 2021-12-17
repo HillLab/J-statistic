@@ -31,7 +31,7 @@ J-statistic has the following dependencies:
 
 ## Usage
 
-Short-Form Argument | Long-Form Argument | Object Type | Description | Range 
+Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Description | Argument Range 
 --- | --- | --- | --- | ---
 -s | --snp | Character | Absolute file path of SNP calls (CSV file) |
 -c | --cnv | Character | Absolute file path of CNV calls (CSV file) |  
