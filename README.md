@@ -34,17 +34,11 @@ J-statistic has the following dependencies:
 Short-Form Argument | Long-Form Argument | Object Type | Description | Range 
 --- | --- | --- | --- | ---
 -s | --snp | Character | Absolute file path of SNP calls (CSV file) |
---- | --- | --- | --- | --- 
 -c | --cnv | Character | Absolute file path of CNV calls (CSV file) |  
---- | --- | --- | --- | --- 
 -o | --output | Character | Absolute file path of output directory |  
---- | --- | --- | --- | --- 
 -n | --nrun | Integer | Number of bootstrap simulations |  Default:10 ; Recommended Range: 10-100
---- | --- | --- | --- | --- 
 -h | --het | Integer | Minimum number of heterozygous SNPs |  Default:10 ; Recommended Range: 10-100
---- | --- | --- | --- | --- 
 -x | --seed | Integer | Number of bootstrap simulations |  Default:12345
---- | --- | --- | --- | ---
 
 ## Tutorial
 
