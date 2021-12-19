@@ -14,6 +14,13 @@ if (length(github_packages) > 0) {
 
 library(rowr)
 
+calls = read.csv("./example/input/example_SNP.csv")
+cnvsData = read.csv("./example/input/example_CNV.csv")
+output_directory = "/Users/davidchen/Documents/GitHub/J-statistic/package/example/output2"
+numRuns = 10
+heterozygousCallCutoff = 10
+seed = 1
+
 ######################################
 #Stage 1: Setup user-input parameters#
 ######################################
@@ -193,10 +200,10 @@ for (file in list.files(path = output_directory, pattern= paste0('^(SNP_).*(.csv
 
     dir.create(paste0(output_directory, '/', fileNoSuffix,'/',fileNoSuffix,'_chr ', i), showWarnings = FALSE) #creates a new folders
 
+    #Save Rainfall Plot
+    pdf(file=paste0(output_directory,'/',fileNoSuffix,'/',fileNoSuffix,'_chr ', i,'/',fileNoSuffix,' Chr', i,' Rainfall Plot.pdf'))
     plot(log10(diff(SNP.example)) ~ SNP.example[-1], pch = 16)
-    dev.copy(pdf, paste0(output_directory,'/',fileNoSuffix,'/',fileNoSuffix,'_chr ', i,'/',fileNoSuffix,' Chr', i,' Rainfall Plot.pdf'))
     dev.off()
-    
     
     ###############################################################################
     
@@ -275,6 +282,7 @@ for (file in list.files(path = output_directory, pattern= paste0('^(SNP_).*(.csv
     SNP.CNV.dist <- distance_to_nearest(sample.SNPs, sample.CNVs.2)
     
     
+    pdf(file=paste0(output_directory, "/", fileNoSuffix,'/',fileNoSuffix,'_chr ', i, '/',fileNoSuffix, ' Chr ', i, ' Rainbow.pdf'))
     
     plot(sample.CNVs.2, axes = FALSE, y = rep(0.1, dim(sample.CNVs.2)[1]),
          xlim = range(sample.SNPs), 
@@ -297,9 +305,11 @@ for (file in list.files(path = output_directory, pattern= paste0('^(SNP_).*(.csv
     mtext(2, text = "Distance from SNPs to closest CNV (bp)", cex = 1.2, line = 2.5)
     title(main = paste0(fileNoSuffix," Chr", i))
     #End of New Rainbow Plot#
-    dev.copy(pdf, paste0(output_directory, "/", fileNoSuffix,'/',fileNoSuffix,'_chr ', i, '/',fileNoSuffix, ' Chr ', i, ' Rainbow.pdf'))
-    dev.off()
     
+    #Save Rainbow Plot
+    #dev.copy(pdf, paste0(output_directory, "/", fileNoSuffix,'/',fileNoSuffix,'_chr ', i, '/',fileNoSuffix, ' Chr ', i, ' Rainbow.pdf'))
+    dev.off()
+
     #Beginning of J statistic Analysis#
     range(distance_to_nearest(sample.SNPs, sample.CNVs.2))
     
@@ -351,13 +361,16 @@ for (file in list.files(path = output_directory, pattern= paste0('^(SNP_).*(.csv
     # Positive association, smaller value, tend to be close together
     # For small chromosomes: xlim = range(distance_to_nearest(sample.SNPs, sample.CNVs.2))
     
+    #Save J-statistic Plot
+    pdf(file=paste0(output_directory, '/',fileNoSuffix,'/',fileNoSuffix,'_chr ', i, '/', fileNoSuffix,' Chr ',i,' J Statistic.pdf'))
     plot.upper <- max(c(test.result.SNP.CNV$sample.info[["J.fun.sample"]], test.result.SNP.CNV$Null.output[["gcb.upper"]]), na.rm =  T) + 0.01
     plot.lower <- min(c(test.result.SNP.CNV$sample.info[["J.fun.sample"]], test.result.SNP.CNV$Null.output[["gcb.lower"]]), na.rm = T) - 0.01
     plot(test.result.SNP.CNV$sample.info[["J.fun.sample"]] ~ r_use_1, type = 'l', ylim = c(plot.lower, plot.upper), lwd = 2, xlab = 'r', ylab = 'J function', main = "J function")
     lines(test.result.SNP.CNV$Null.output[["gcb.upper"]] ~ r_use_1, lty = 2, lwd = 2, col = 4)
     lines(test.result.SNP.CNV$Null.output[["gcb.lower"]] ~ r_use_1, lty = 2, lwd = 2, col = 4)
     legend("topleft", c("Observed J Function", "Global Confidence Bands"), lty = c(1,2), lwd = c(2,2), col = c(1, 4), cex=0.5)
-    dev.copy(pdf, paste0(output_directory, '/',fileNoSuffix,'/',fileNoSuffix,'_chr ', i, '/', fileNoSuffix,' Chr ',i,' J Statistic.pdf'))
+
+    #dev.copy(pdf, paste0(output_directory, '/',fileNoSuffix,'/',fileNoSuffix,'_chr ', i, '/', fileNoSuffix,' Chr ',i,' J Statistic.pdf'))
     dev.off()
     
     #Print to terminal if 
