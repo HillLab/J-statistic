@@ -8,7 +8,7 @@ J-statistic is an easy-to-use statistical pipeline designed to infer association
 2. SNP differences outside of CNV regions have similar properties in clearly defined CNV nearby regions as for regions further away.
 3. SNP differences outside of CNV regions have similar properties everywhere on the chromosome.
 
-Thus, the J-statistic approach aims to infer whether the existence of CNVs could influence the spacing of SNP differences outside of CNVs or whether there tend to be more or less SNP differences in regions near the CNVs compared to those farther away. 
+Thus, the J-statistic approach aims to infer whether the existence of CNVs could influence the spacing of SNP differences outside of CNVs or whether there tend to be more or less SNP differences in regions near the CNVs compared to those farther away. J-statistic was originally tested use SNP calls from [placeholder] and CNV calls from [PennCNV](http://penncnv.openbioinformatics.org/en/latest/). 
 
 ## Installation
 
@@ -31,7 +31,7 @@ J-statistic has the following dependencies:
 
 ## Usage
 
-Summary of the different arguments that J-statistic.R uses as input. The script will output summary statistics for each chromosome of each individual microarray, along with Rainbow plots, Rainfall plots, and J function plots.
+Summary of the different arguments that `J-statistic.R` uses as input. The script will output summary statistics for each chromosome of each individual microarray, along with Rainbow plots, Rainfall plots, and J function plots.
 
 Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Description | Argument Range 
 --- | --- | --- | --- | ---
@@ -44,7 +44,7 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 
 ## Tutorial
 
-The `J_statistic.R` converts the input SNP and CNV data files into a single processed file, then tests for statistical association between SNPs and CNVs and output the statistical results as a summary Excel file with associated plots. 
+The `J_statistic.R` converts the input SNP and CNV data files into a single processed file, then tests for statistical association between SNPs and CNVs and outputs the statistical results as a summary Excel file with associated plots. 
 
 Using the example input data found at `./example/input`, `J_statistic.R` run using the following command in terminal will produce the output found at `./example/output`:
 
