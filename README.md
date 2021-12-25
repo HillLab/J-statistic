@@ -35,12 +35,18 @@ Summary of the different arguments that `J-statistic.R` uses as input. The scrip
 
 Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Description | Argument Range 
 --- | --- | --- | --- | ---
--s | --snp | Character | Absolute file path of SNP calls (CSV file) |
--c | --cnv | Character | Absolute file path of CNV calls (CSV file) |  
--o | --output | Character | Absolute file path of output directory |  
+-s | --snp | Character | Absolute file path of SNP calls (CSV file) | User-specified file path
+-c | --cnv | Character | Absolute file path of CNV calls (CSV file) | User-specified file path
+-o | --output | Character | Absolute file path of output directory | User-specified file path
 -n | --nrun | Integer | Number of bootstrap simulations |  Default:10 ; Recommended Range: 10-100
 -h | --het | Integer | Minimum number of heterozygous SNPs |  Default:10 ; Recommended Range: 10-100
 -x | --seed | Integer | Number of bootstrap simulations |  Default:12345
+-m | --assocation_max_distance | Integer | Maximum distance between SNPs and CNVs to test association between SNPs and CNVs. | Default:10000000; Recommended Range: 1000000-50000000
+-i | --association_interval_distance | Integer | Interval step size to test association between SNPs and CNVs. | Default: 5000; Recommended Range: 1000-10000
+-n | --cluster_max_distance | Integer | Maximum distance between SNPs to test for existence of SNP clusters. | Default:100000; Recommended Range: 10000-500000
+-j | --cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
+-a | --alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
+
 
 ## Tutorial
 
