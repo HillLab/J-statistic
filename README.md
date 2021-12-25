@@ -94,11 +94,13 @@ The `J_statistic.R` converts the input SNP and CNV data files into a single proc
 
 The example input data found at `./example/input` includes one SNP data file (`./example/input/example_SNP.csv`) containing SNPs and one CNV data file (`./example/input/example_CNV.csv`) containing CNVs for 2 unique samples. 
 
-.`J_statistic.R` run using the following command in terminal will produce the output found at `./example/output`:
+`J_statistic.R` run using the following command in terminal will produce the output found at `./example/output`:
 
-`cd [Directory where J-statistic.R is located]`
+```sh
+cd [Directory where J-statistic.R is located]
 
-`Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/output`
+Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/output
+```
 
 ## Structure of J-statistic package
 <pre>
