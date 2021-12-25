@@ -47,6 +47,31 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 -j | --cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
 -a | --alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
 
+## Output
+
+Using SNP and CNV data from two samples (Sample 1 and Sample 2) as input, the expected structure of the J-statistic script output in the user-specified directory is shown.
+
+├── Output Directory                                                              // User-specified output directory for all test results.
+│   └── summary_output_statistics.csv                                             // Summary file of statistical results for all chromosomes of all samples.
+│   └── Sample_1.csv                                                              // Sample 1 merged table of input SNP and CNV data. 
+│   └── Sample_2.csv                                                              // Sample 1 merged table of input SNP and CNV data. 
+│   └── Sample_1                                                                  // Sample 1 directory of all chromosome-specific statistical results and plots. 
+│   │   └── Sample_1_Chr_1                                                        // Sample 1 sub-directory of Chromosome 1-specific statstical results and plots.
+│   │   │   └── Sample_1_Chr_1_Clustering.Rdata                                   // Sample 1 Chromosome 1: Rdata file of KS test for existence of SNP clusters.
+│   │   │   └── Sample_1_Chr_1_Association_Test.Rdata                             // Sample 1 Chromosome 1: Rdata file of J-statistic test for SNP-CNV association.
+│   │   │   └── Sample_1_Chr_1_J_statistic.pdf                                    // Sample 1 Chromosome 1: J-statistic plot.
+│   │   │   └── Sample_1_Chr_1_Rainfall.pdf                                       // Sample 1 Chromosome 1: Rainfall plot.
+│   │   │   └── Sample_1_Chr_1_Rainbow.pdf                                        // Sample 1 Chromosome 1: Rainbow plot.
+│   │   │   └── Sample_1_Chr_1_stats.txt                                          // Sample 1 Chromosome 1: SNP cluster and SNP-CNV association test results.
+│   │   └── Sample_1_Chr_2                                                        // Sample 1 sub-directory of Chromosome 2-specific statstical results and plots.
+│   │   └── Sample_1_Chr_3                                                        // Sample 1 sub-directory of Chromosome 3-specific statstical results and plots.
+│   │   └── ...
+│   └── Sample_2                                                                  // Sample 2 directory of all chromosome-specific statistical results and plots. 
+│   │   └── Sample_2_Chr_1                                                        // Sample 2 sub-directory of Chromosome 1-specific statstical results and plots.
+│   │   └── Sample_2_Chr_2                                                        // Sample 2 sub-directory of Chromosome 2-specific statstical results and plots. 
+│   │   └── Sample_2_Chr_3                                                        // Sample 2 sub-directory of Chromosome 3-specific statstical results and plots.
+│   │   └── ...
+
 
 ## Tutorial
 
