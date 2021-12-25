@@ -17,6 +17,9 @@ if (length(github_packages) > 0) {
 
 library(rowr)
 
+# Load reference functions
+load(file = "reference_functions.RData")
+
 ######################################
 #Stage 1: Setup user-input parameters#
 ######################################
@@ -28,7 +31,7 @@ option_list = list(
               help="Absolute file path of CNV calls (CSV file).", metavar="CNV_CALL_FILE_PATH"),
   make_option(c("-o", "--output"), type="character", default=NULL, 
               help="Absolute file path of output directory.", metavar="OUTPUT_DIRECTORY_FILE_PATH"),
-  make_option(c("-n", "--n_run"), type="integer", default=10, 
+  make_option(c("-r", "--n_run"), type="integer", default=10, 
               help="Number of bootstrap simulations/", metavar="NUMBER_OF_RUNS"),
   make_option(c("-h", "--min_snp"), type="integer", default=1000, 
               help="Minimum number of SNPs.", metavar="MIN_NUMBER_OF_SNPS"),
@@ -42,8 +45,8 @@ option_list = list(
               help="Maximum distance between SNPs to test for existence of SNP clusters.", metavar="SNP_CLUSTER_MAX_DISTANCE"),
   make_option(c("-j", "--cluster_interval_distance"), type="integer", default=5000, 
               help="Interval distance for SNP clustering test.", metavar="SNP_CLUSTER_INTERVAL_DISTANCE"),
-  make_option(c("-a", "--alpha"), type="float", default=0.05, 
-              help="Alpha value for significance threshold.", metavar="ALPHA"),
+  make_option(c("-a", "--alpha"), type="numeric", default=0.05, 
+              help="Alpha value for significance threshold.", metavar="ALPHA")
 )
 
 # Parse user-specified parameters in terminal as vector
@@ -151,6 +154,9 @@ stage_3_pb_counter = 0
 # Generates Rainbow, Rainfall, and J-statistic plots along with summary statistics to test for the existence of SNP clusters and association between SNPs and CNVs 
 for (file in list.files(path=output_directory, pattern=".csv", all.files=TRUE, full.names=TRUE)){
 
+  # Read in merged SNP and CNV dataframe
+  cancer.data <- read.csv(paste0(file), header=T)
+  
   # Initialize dataframe for the Excel document output with the generated statistics for one sample
   excel_table<-data.frame(matrix(ncol=6,nrow=length(as.numeric(na.omit(unique(cancer.data[["SNP.Chromosome"]]))))))
   colnames(excel_table)<- c('Chromosome', 'p.KS', 'p.J', 'Num_CNV', 'SNP_CNV_Association', 'Sample')
@@ -163,9 +169,6 @@ for (file in list.files(path=output_directory, pattern=".csv", all.files=TRUE, f
   # Create empty output directory
   dir.create(paste0(output_directory, '/', fileNoSuffix), showWarnings = F)
 
-  # Read in merged SNP and CNV dataframe
-  cancer.data <- read.csv(paste0(file), header=T)
-  
   # Generate statistics and plots for each chromosome with SNPs (above cutoff) and CNVs
   for (i in as.numeric(na.omit(unique(cancer.data[["SNP.Chromosome"]])))){
 
@@ -180,7 +183,7 @@ for (file in list.files(path=output_directory, pattern=".csv", all.files=TRUE, f
     probe.set.19 <- cancer.data.19$Position
     
     # Get the subset of SNPs of interest (marked with only 1)
-    SNP.example <- sort(as.numeric(na.omit(probe.set.19[which(cancer.data.19[, fileNoSuffix] == 1)])))
+    SNP.example <- sort(as.numeric(na.omit(probe.set.19[which(cancer.data.19[,fileNoSuffix] == 1)])))
 
     # If chromosome has no CNVs, then just make empty folder and note on output summary statistic table 
     if (!(i %in% (unique(cancer.data$CNV.Chromosome)))){
