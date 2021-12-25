@@ -44,7 +44,7 @@ library(devtools)
 install_github("cvarrichio/rowr")
 ```
 
-## Usage
+## Parameters
 
 Summary of the different arguments that `J-statistic.R` uses as input. The script will output summary statistics for each chromosome of each individual microarray, along with Rainbow plots, Rainfall plots, and J function plots. Using the long-form arguments when running the `J-statistic.R` in a terminal is highly recommended. 
 
@@ -61,6 +61,8 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 -n | --cluster_max_distance | Integer | Maximum distance between SNPs to test for existence of SNP clusters. | Default:100000; Recommended Range: 10000-500000
 -j | --cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
 -a | --alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
+
+## Input
 
 ## Output
 
@@ -88,15 +90,21 @@ Using SNP and CNV data from two samples (Sample 1 and Sample 2) as input, the ex
 │   │   └── ...
 </pre>
 
-## Tutorial
+## Example Dataset and Tutorial
 
-The `J_statistic.R` converts the input SNP and CNV data files into a single processed file, then tests for statistical association between SNPs and CNVs and outputs the statistical results as a summary Excel file with associated plots. 
+The `J_statistic.R` converts the input SNP and CNV data files into a single processed file, then tests for existence of SNP clusters and association between SNPs and CNVs, as well as outputs the statistical results for each sample as a summary Excel file with associated plots. 
 
-Using the example input data found at `./example/input`, `J_statistic.R` run using the following command in terminal will produce the output found at `./example/output`:
+The example input data found at `./example/input` includes one SNP data file (`./example/input/example_SNP.csv`) containing SNPs and one CNV data file (`./example/input/example_CNV.csv`) containing CNVs for 2 unique samples. 
 
-`cd [Directory where J-statistic.R is located]`
+`J_statistic.R` run using the following command in terminal will produce the output found at `./example/output`:
 
-`Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/output --nrun 10 --het 10 --seed 1`
+```sh
+cd [Directory where J-statistic.R is located]
+
+Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/output
+```
+
+## Use Cases
 
 ## Structure of J-statistic package
 <pre>
