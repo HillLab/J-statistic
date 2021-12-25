@@ -64,9 +64,35 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 
 ## Input
 
+The expected input into the `J-statistic.R` script is one SNP file in CSV format and one CNV file in CSV format. Examples of a correctly formatted SNP and CNV input file can be found in `./example/input`. See Section `Example Dataset and Tutorial` to run this example data. The required format, column names, and data fields for custom SNP and CNV input is described below.
+
+#### SNP Input File
+The SNP input file requires a unique identifier for each SNP (ID), the chromosome where the SNP exists (SNP.Chromosome), the base position on the chromosome where the SNP exists (Position), and a binary matrix for each sample (e.g. SNP_mDIV_A1 and SNP_mDIV_C4). An unlimited number of samples can be included in one SNP input file, where SNPs associated with each sample is represented by one unique column in the SNP input file.
+
+The binary matrix for each sample column (e.g. SNP_mDIV_A1 and SNP_mDIV_C4) uses the integer value of `1` to show that a SNP exists in the sample and the integer value of `0` to show that a SNP does not exist in the sample. In the example SNP input file below, the JAX00000002 SNP only exists in SNP_mDIV_A1, the JAX00000003 SNP only exists in SNP_mDIV_C4, and the JAX00240566 SNP does not exist in either SNP_mDIV_A1 or SNP_mDIV_C4.  
+
+ID | SNP.Chromosome | Position | SNP_mDIV_A1 | SNP_mDIV_C4
+--- | --- | --- | --- | ---
+JAX00000002 | 1 | 30460970 | 1 | 0
+JAX00000003 | 1 | 30461840 | 0 | 1
+JAX00240566 | 1 | 30491060 | 0 | 0
+ | | | |
+
+#### CNV Input File
+The CNV input file requires the chromosome where the CNV exists (CNV.Chromosome), the start base position of the CNV segment (Start), the end base position of the CNV segment (End), and the sample name (Sample). An unlimited number of samples can be included in one CNV input file, where CNVs associated with each sample is represented by one or more rows in the CNV input file.
+
+In the example CNV input file below, there exists a CNV on Chromosome 1 from 30688847-30934770 base position observed in Sample SNP_mDIV_A1. 
+
+CNV.Chromosome | Start | End | Sample
+--- | --- | --- | --- 
+1 | 30688847 | 30934770 | SNP_mDIV_A1 
+1 | 132977602 | 133459657 | SNP_mDIV_A1 
+1 | 132977602 | 133459657 | SNP_mDIV_C4 
+ | | | 
+ 
 ## Output
 
-Using SNP and CNV data from two samples (Sample 1 and Sample 2) as input, the expected structure of the J-statistic script output in the user-specified directory is shown.
+Using SNP and CNV data from two samples (Sample 1 and Sample 2) as input, the expected structure of the `J-statistic.R` script output in the user-specified directory is shown.
 <pre>
 ├── Output Directory                                                              // User-specified output directory for all test results.
 │   └── summary_output_statistics.csv                                             // Summary file of statistical results for all chromosomes of all samples.
