@@ -90,13 +90,15 @@ Using SNP and CNV data from two samples (Sample 1 and Sample 2) as input, the ex
 
 ## Tutorial
 
-The `J_statistic.R` converts the input SNP and CNV data files into a single processed file, then tests for statistical association between SNPs and CNVs and outputs the statistical results as a summary Excel file with associated plots. 
+The `J_statistic.R` converts the input SNP and CNV data files into a single processed file, then tests for existence of SNP clusters and association between SNPs and CNVs, as well as outputs the statistical results for each sample as a summary Excel file with associated plots. 
 
-Using the example input data found at `./example/input`, `J_statistic.R` run using the following command in terminal will produce the output found at `./example/output`:
+The example input data found at `./example/input` includes one SNP data file (`./example/input/example_SNP.csv`) containing SNPs and one CNV data file (`./example/input/example_CNV.csv`) containing CNVs for 2 unique samples. 
+
+.`J_statistic.R` run using the following command in terminal will produce the output found at `./example/output`:
 
 `cd [Directory where J-statistic.R is located]`
 
-`Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/output --nrun 10 --het 10 --seed 1`
+`Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/output`
 
 ## Structure of J-statistic package
 <pre>
