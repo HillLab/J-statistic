@@ -29,6 +29,21 @@ J-statistic has the following dependencies:
 - [Optparse 1.7.1](https://cran.r-project.org/web/packages/optparse/index.html)
 - [Rowr](https://github.com/cvarrichio/rowr)
 
+The `J_statistic.R` will automatically attempt to install dependencies not found in the current working environment. 
+
+To install Devtools, Intervals, and Optparse from CRAN manually, use the following command in an interactive R environment: 
+
+```sh
+install.packages(c("intervals", "devtools", "optparse"))  
+```
+
+To install Rowr from GitHub manually, use the following command in an interactive R environment:
+
+```sh
+library(devtools)
+install_github("cvarrichio/rowr")
+```
+
 ## Usage
 
 Summary of the different arguments that `J-statistic.R` uses as input. The script will output summary statistics for each chromosome of each individual microarray, along with Rainbow plots, Rainfall plots, and J function plots.
