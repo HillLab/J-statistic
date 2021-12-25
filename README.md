@@ -108,9 +108,12 @@ Using the example input data found at `./example/input`, `J_statistic.R` run usi
 │   │   └── example_CNV.csv                                                       // Example SNP file used as input into J-statistic script. 
 │   │   └── example_SNP.csv                                                       // Example CNV file used as input into J-statistic script. 
 │   └── output                                                                    // Directory containing example output summary statistics and Rainfall, Rainbow, and J-statistic plots. 
-│   │   └── SNP_mDIV_A1.SNP09_319_111109                                          // Directory containing summary statistics and plots for one microarray. 
+│   │   └── SNP_mDIV_A1.SNP09_319_111109                                          // Directory containing summary statistics and plots for SNP_mDIV_A1.SNP09_319_111109 sample. 
 │   │   └── SNP_mDIV_A1.SNP09_319_111109.csv                                      // Processed data combining SNP and CNV input files. 
+│   │   └── SNP_mDIV_C4_SNP09_300_102709                                          // Directory containing summary statistics and plots for SNP_mDIV_C4_SNP09_300_102709 sample. 
+│   │   └── SNP_mDIV_C4_SNP09_300_102709.csv                                      // Processed data combining SNP and CNV input files. 
 ├── J_statistic.R                                                                 // J-statistic R script. 
+├── reference_functions.R                                                         // Supporting functions needed for J-statistic R script. 
 </pre>
 
 ## Citing J-statistic
