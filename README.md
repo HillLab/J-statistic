@@ -46,14 +46,14 @@ install_github("cvarrichio/rowr")
 
 ## Usage
 
-Summary of the different arguments that `J-statistic.R` uses as input. The script will output summary statistics for each chromosome of each individual microarray, along with Rainbow plots, Rainfall plots, and J function plots.
+Summary of the different arguments that `J-statistic.R` uses as input. The script will output summary statistics for each chromosome of each individual microarray, along with Rainbow plots, Rainfall plots, and J function plots. Using the long-form arguments when running the `J-statistic.R` in a terminal is highly recommended. 
 
 Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Description | Argument Range 
 --- | --- | --- | --- | ---
 -s | --snp | Character | Absolute file path of SNP calls (CSV file) | User-specified file path
 -c | --cnv | Character | Absolute file path of CNV calls (CSV file) | User-specified file path
 -o | --output | Character | Absolute file path of output directory | User-specified file path
--n | --nrun | Integer | Number of bootstrap simulations |  Default:10 ; Recommended Range: 10-100
+-r | --nrun | Integer | Number of bootstrap simulations |  Default:10 ; Recommended Range: 10-100
 -h | --het | Integer | Minimum number of heterozygous SNPs |  Default:10 ; Recommended Range: 10-100
 -x | --seed | Integer | Number of bootstrap simulations |  Default:12345
 -m | --assocation_max_distance | Integer | Maximum distance between SNPs and CNVs to test association between SNPs and CNVs. | Default:10000000; Recommended Range: 1000000-50000000
