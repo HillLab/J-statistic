@@ -46,14 +46,14 @@ install_github("cvarrichio/rowr")
 
 ## Usage
 
-Summary of the different arguments that `J-statistic.R` uses as input. The script will output summary statistics for each chromosome of each individual microarray, along with Rainbow plots, Rainfall plots, and J function plots.
+Summary of the different arguments that `J-statistic.R` uses as input. The script will output summary statistics for each chromosome of each individual microarray, along with Rainbow plots, Rainfall plots, and J function plots. Using the long-form arguments when running the `J-statistic.R` in a terminal is highly recommended. 
 
 Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Description | Argument Range 
 --- | --- | --- | --- | ---
 -s | --snp | Character | Absolute file path of SNP calls (CSV file) | User-specified file path
 -c | --cnv | Character | Absolute file path of CNV calls (CSV file) | User-specified file path
 -o | --output | Character | Absolute file path of output directory | User-specified file path
--n | --nrun | Integer | Number of bootstrap simulations |  Default:10 ; Recommended Range: 10-100
+-r | --nrun | Integer | Number of bootstrap simulations |  Default:10 ; Recommended Range: 10-100
 -h | --het | Integer | Minimum number of heterozygous SNPs |  Default:10 ; Recommended Range: 10-100
 -x | --seed | Integer | Number of bootstrap simulations |  Default:12345
 -m | --assocation_max_distance | Integer | Maximum distance between SNPs and CNVs to test association between SNPs and CNVs. | Default:10000000; Recommended Range: 1000000-50000000
@@ -108,9 +108,12 @@ Using the example input data found at `./example/input`, `J_statistic.R` run usi
 │   │   └── example_CNV.csv                                                       // Example SNP file used as input into J-statistic script. 
 │   │   └── example_SNP.csv                                                       // Example CNV file used as input into J-statistic script. 
 │   └── output                                                                    // Directory containing example output summary statistics and Rainfall, Rainbow, and J-statistic plots. 
-│   │   └── SNP_mDIV_A1.SNP09_319_111109                                          // Directory containing summary statistics and plots for one microarray. 
+│   │   └── SNP_mDIV_A1.SNP09_319_111109                                          // Directory containing summary statistics and plots for SNP_mDIV_A1.SNP09_319_111109 sample. 
 │   │   └── SNP_mDIV_A1.SNP09_319_111109.csv                                      // Processed data combining SNP and CNV input files. 
+│   │   └── SNP_mDIV_C4_SNP09_300_102709                                          // Directory containing summary statistics and plots for SNP_mDIV_C4_SNP09_300_102709 sample. 
+│   │   └── SNP_mDIV_C4_SNP09_300_102709.csv                                      // Processed data combining SNP and CNV input files. 
 ├── J_statistic.R                                                                 // J-statistic R script. 
+├── reference_functions.R                                                         // Supporting functions needed for J-statistic R script. 
 </pre>
 
 ## Citing J-statistic
