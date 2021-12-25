@@ -155,7 +155,7 @@ Example Use Case 3. Test for SNP cluster existence and SNP-CNV association using
 Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/example_use_case_3 --alpha 0.10 
 ```
 
-The output data for each of the 3 unique example use cases can be found open-accesson Zenodo: <a href="https://doi.org/10.5281/zenodo.5804599"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5804599.svg" alt="DOI"></a>
+The output data for each of the 3 unique example use cases can be found open-access on Zenodo: <a href="https://doi.org/10.5281/zenodo.5804599"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5804599.svg" alt="DOI"></a>
 
 ## Structure of J-statistic package
 <pre>
