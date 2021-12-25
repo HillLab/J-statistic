@@ -142,7 +142,7 @@ Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/inpu
 ```
 
 ```sh
-Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output /Users/davidchen/Documents/GitHub/J-statistic/package/example/output3 --cluster_max_distance 50000 —cluster_interval_distance 1000
+Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output /Users/davidchen/Documents/GitHub/J-statistic/package/example/output3 --cluster_max_distance 50000 —-cluster_interval_distance 1000
 ```
 
 ```sh
