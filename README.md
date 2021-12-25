@@ -8,7 +8,7 @@ J-statistic is an easy-to-use statistical pipeline designed to infer association
 2. SNP differences outside of CNV regions have similar properties in clearly defined CNV nearby regions as for regions further away.
 3. SNP differences outside of CNV regions have similar properties everywhere on the chromosome.
 
-Thus, the J-statistic approach aims to infer whether the existence of CNVs could influence the spacing of SNP differences outside of CNVs or whether there tend to be more or less SNP differences in regions near the CNVs compared to those farther away. J-statistic was originally tested use SNP calls from [placeholder] and CNV calls from [PennCNV](http://penncnv.openbioinformatics.org/en/latest/). 
+Thus, the J-statistic approach aims to infer whether the existence of CNVs could influence the spacing of SNP differences outside of CNVs or whether there tend to be more or less SNP differences in regions near the CNVs compared to those farther away. J-statistic was originally tested using microarray probe data.
 
 ## Installation
 
@@ -54,13 +54,18 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 -c | --cnv | Character | Absolute file path of CNV calls (CSV file) | User-specified file path
 -o | --output | Character | Absolute file path of output directory | User-specified file path
 -r | --nrun | Integer | Number of bootstrap simulations |  Default:10 ; Recommended Range: 10-100
--h | --het | Integer | Minimum number of heterozygous SNPs |  Default:10 ; Recommended Range: 10-100
+-h | --min_snp | Integer | Minimum number of SNPs |  Default:10 ; Recommended Range: 10-100
 -x | --seed | Integer | Number of bootstrap simulations |  Default:12345
 -m | --assocation_max_distance | Integer | Maximum distance between SNPs and CNVs to test association between SNPs and CNVs. | Default:10000000; Recommended Range: 1000000-50000000
 -i | --association_interval_distance | Integer | Interval step size to test association between SNPs and CNVs. | Default: 5000; Recommended Range: 1000-10000
 -n | --cluster_max_distance | Integer | Maximum distance between SNPs to test for existence of SNP clusters. | Default:100000; Recommended Range: 10000-500000
 -j | --cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
 -a | --alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
+
+The `--max_distance` and `--interval_distance` parameters set the maximum distance and step size to test for existence of SNP clustering and SNP-CNV association. Shown below is a visualization of different `--max_distance` and `--interval_distance` parameters. 
+
+# <img src="https://github.com/HillLab/J-statistic/blob/main/J_statistic_Grid_Points_Figure.jpg" alt="Grid Points Figure" width="1000" style="float: right;"/>
+
 
 ## Input
 
@@ -130,7 +135,27 @@ cd [Directory where J-statistic.R is located]
 Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/output
 ```
 
-## Use Cases
+## Example Use Cases
+
+Example Use Case 1. Test for SNP-CNV association using smaller interval sizes than default. 
+
+```sh
+Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/example_use_case_1 --association_max_distance 10000000 --association_interval_distance 1000
+```
+
+Example Use Case 2. Test for SNP cluster existence using smaller maximum distances between SNPs and interval sizes than default. 
+
+```sh
+Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/example_use_case_2 --cluster_max_distance 50000 —-cluster_interval_distance 1000
+```
+
+Example Use Case 3. Test for SNP cluster existence and SNP-CNV association using a larger alpha value than default. 
+
+```sh
+Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/example_use_case_3 --alpha 0.10 
+```
+
+The output data for each of the 3 unique example use cases can be found open-access on Zenodo: <a href="https://doi.org/10.5281/zenodo.5804599"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5804599.svg" alt="DOI"></a>
 
 ## Structure of J-statistic package
 <pre>
