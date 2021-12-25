@@ -50,7 +50,7 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 ## Output
 
 Using SNP and CNV data from two samples (Sample 1 and Sample 2) as input, the expected structure of the J-statistic script output in the user-specified directory is shown.
-
+<pre>
 ├── Output Directory                                                              // User-specified output directory for all test results.
 │   └── summary_output_statistics.csv                                             // Summary file of statistical results for all chromosomes of all samples.
 │   └── Sample_1.csv                                                              // Sample 1 merged table of input SNP and CNV data. 
@@ -71,7 +71,7 @@ Using SNP and CNV data from two samples (Sample 1 and Sample 2) as input, the ex
 │   │   └── Sample_2_Chr_2                                                        // Sample 2 sub-directory of Chromosome 2-specific statstical results and plots. 
 │   │   └── Sample_2_Chr_3                                                        // Sample 2 sub-directory of Chromosome 3-specific statstical results and plots.
 │   │   └── ...
-
+</pre>
 
 ## Tutorial
 
