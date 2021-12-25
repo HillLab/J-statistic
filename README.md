@@ -62,6 +62,9 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 -j | --cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
 -a | --alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
 
+# <img src="https://github.com/HillLab/J-statistic/blob/main/J_statistic_Grid_Points_Figure.jpg" alt="Grid Points Figure" width="800" style="float: right;"/>
+
+
 ## Input
 
 The expected input into the `J-statistic.R` script is one SNP file in CSV format and one CNV file in CSV format. Examples of a correctly formatted SNP and CNV input file can be found in `./example/input`. See Section `Example Dataset and Tutorial` to run this example data. The required format, column names, and data fields for custom SNP and CNV input is described below.
