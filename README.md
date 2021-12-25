@@ -76,7 +76,7 @@ ID | SNP.Chromosome | Position | SNP_mDIV_A1 | SNP_mDIV_C4
 JAX00000002 | 1 | 30460970 | 1 | 0
 JAX00000003 | 1 | 30461840 | 0 | 1
 JAX00240566 | 1 | 30491060 | 0 | 0
- | | | |
+... | ... | ... | ... | ...
 
 #### CNV Input File
 The CNV input file requires the chromosome where the CNV exists (CNV.Chromosome), the start base position of the CNV segment (Start), the end base position of the CNV segment (End), and the sample name (Sample). An unlimited number of samples can be included in one CNV input file, where CNVs associated with each sample is represented by one or more rows in the CNV input file.
@@ -88,7 +88,7 @@ CNV.Chromosome | Start | End | Sample
 1 | 30688847 | 30934770 | SNP_mDIV_A1 
 1 | 132977602 | 133459657 | SNP_mDIV_A1 
 1 | 132977602 | 133459657 | SNP_mDIV_C4 
- | | | 
+... | ... | ... | ...
  
 ## Output
 
