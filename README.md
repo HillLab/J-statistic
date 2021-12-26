@@ -86,7 +86,7 @@ JAX00240566 | 1 | 30491060 | 0 | 0
 ### CNV Input File
 The CNV input file requires the chromosome where the CNV exists (CNV.Chromosome), the start base position of the CNV segment (Start), the end base position of the CNV segment (End), and the sample name (Sample). An unlimited number of samples can be included in one CNV input file, where CNVs associated with each sample is represented by one or more rows in the CNV input file.
 
-In the example CNV input file below, there exists a CNV on Chromosome 1 from 30688847-30934770 base position observed in Sample SNP_mDIV_A1. 
+In the example CNV input file below, one CNV on Chromosome 1 from 30688847-30934770 base position is observed in Sample SNP_mDIV_A1. 
 
 CNV.Chromosome | Start | End | Sample
 --- | --- | --- | --- 
