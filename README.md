@@ -172,7 +172,7 @@ The output data for each of the 3 unique example use cases can be found open-acc
 │   │   └── SNP_mDIV_C4_SNP09_300_102709                                          // Directory containing summary statistics and plots for SNP_mDIV_C4_SNP09_300_102709 sample. 
 │   │   └── SNP_mDIV_C4_SNP09_300_102709.csv                                      // Processed data combining SNP and CNV input files. 
 ├── J_statistic.R                                                                 // J-statistic R script. 
-├── reference_functions.R                                                         // Supporting functions needed for J-statistic R script. 
+├── reference_functions.Rdata                                                     // Supporting functions needed for J-statistic R script. 
 </pre>
 
 ## Citing J-statistic
