@@ -72,7 +72,9 @@ The `--wgs_file` and `--wgs_nsample` parameters must only be set when using whol
 
 ## Input
 
-The expected input into the `J-statistic.R` script is one SNP file in CSV format and one CNV file in CSV format. Examples of a correctly formatted SNP and CNV input file can be found in `./example/input`. See Section `Example Dataset and Tutorial` to run this example data. The required format, column names, and data fields for custom SNP and CNV input is described below.
+The expected input into the `J-statistic.R` script is one SNP file in CSV format and one CNV file in CSV format. SNPs and CNVs occurring in sex (X or Y) or mitochondrial (M) chromosomes are excluded from the analysis if not already removed from the input data.
+
+Examples of a correctly formatted SNP and CNV input file can be found in `./example/input`. See Section `Example Dataset and Tutorial` to run this example data. The required format, column names, and data fields for custom SNP and CNV input is described below. 
 
 ### SNP Input File 
 
