@@ -50,22 +50,25 @@ Summary of the different arguments that `J-statistic.R` uses as input. The scrip
 
 Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Description | Argument Range 
 --- | --- | --- | --- | ---
--s | --snp | Character | Absolute file path of SNP calls (CSV file) | User-specified file path
--c | --cnv | Character | Absolute file path of CNV calls (CSV file) | User-specified file path
--o | --output | Character | Absolute file path of output directory | User-specified file path
--r | --nrun | Integer | Number of bootstrap simulations |  Default:10 ; Recommended Range: 10-100
+-s | --snp_file | Character | Absolute file path of SNP calls (CSV file) | User-specified file path
+-c | --cnv_file | Character | Absolute file path of CNV calls (CSV file) | User-specified file path
+-o | --output_dir | Character | Absolute file path of output directory | User-specified file path
+-r | --nrun | Integer | Number of bootstrap simulations |  Default:1000 ; Recommended Range: 1000-10000
 -h | --min_snp | Integer | Minimum number of SNPs |  Default:10 ; Recommended Range: 10-100
--x | --seed | Integer | Number of bootstrap simulations |  Default:12345
+-z | --seed | Integer | Number of bootstrap simulations |  Default:12345
 -m | --assocation_max_distance | Integer | Maximum distance between SNPs and CNVs to test association between SNPs and CNVs. | Default:10000000; Recommended Range: 1000000-50000000
 -i | --association_interval_distance | Integer | Interval step size to test association between SNPs and CNVs. | Default: 5000; Recommended Range: 1000-10000
 -n | --cluster_max_distance | Integer | Maximum distance between SNPs to test for existence of SNP clusters. | Default:100000; Recommended Range: 10000-500000
 -j | --cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
 -a | --alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
+-w | --wgs_file | Character | Absolute file path of file with start and stop coordinates for all segments in whole genome/exome (CSV file) | User-specified file path (Mandatory argument for WGS/WES input data; Null argument for microarray probe input data)
+-x | --wgs_nsample | Integer | Number of randomly sampled locations in whole genome/exome segments for mutation position null distribution estimate. | Default: 300000; Recommended Range: 100000-1000000 for WGS and 1000-10000 for WES
 
 The `--max_distance` and `--interval_distance` parameters set the maximum distance and step size to test for existence of SNP clustering and SNP-CNV association. Shown below is a visualization of different `--max_distance` and `--interval_distance` parameters. 
 
 # <img src="https://github.com/HillLab/J-statistic/blob/main/J_statistic_Grid_Points_Figure.jpg" alt="Grid Points Figure" width="1000" style="float: right;"/>
 
+The `--wgs_file` and `--wgs_nsample` parameters must only be set when using whole genome or whole exome sequencing input data. See `./example/input/example_exome.csv` and `./example/input/example_genome.csv` for an example of the format and required fields of the `--wgs_file` file needed.
 
 ## Input
 
