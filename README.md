@@ -179,25 +179,25 @@ Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/inpu
 Example Use Case 1. Test for SNP-CNV association using smaller interval sizes than default. Low number of bootstrap simulations (`--nrun 10`) to speed up run for proof of concept. 
 
 ```sh
-Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/example_use_case_1 --association_max_distance 10000000 --association_interval_distance 1000 --nrun 10
+Rscript J_statistic.R --snp_file ./example/input/example_SNP.csv --cnv_file ./example/input/example_CNV.csv --output_dir ./example/example_use_case_1 --association_max_distance 10000000 --association_interval_distance 1000 --nrun 10
 ```
 
 Example Use Case 2. Test for SNP cluster existence using smaller maximum distances between SNPs and interval sizes than default. Low number of bootstrap simulations (`--nrun 10`) to speed up run for proof of concept. 
 
 ```sh
-Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/example_use_case_2 --cluster_max_distance 50000 —-cluster_interval_distance 1000 --nrun 10
+Rscript J_statistic.R --snp_file ./example/input/example_SNP.csv --cnv_file ./example/input/example_CNV.csv --output_dir ./example/example_use_case_2 --cluster_max_distance 50000 —-cluster_interval_distance 1000 --nrun 10
 ```
 
 Example Use Case 3. Test for SNP cluster existence and SNP-CNV association using a larger alpha value than default. Low number of bootstrap simulations (`--nrun 10`) to speed up run for proof of concept. 
 
 ```sh
-Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/example_use_case_3 --alpha 0.10 --nrun 10
+Rscript J_statistic.R --snp_file ./example/input/example_SNP.csv --cnv_file ./example/input/example_CNV.csv --output_dir ./example/example_use_case_3 --alpha 0.10 --nrun 10
 ```
 
 Example Use Case 4. Test for SNP cluster existence and SNP-CNV association using WGS single base mutation data instead of SNP data from microarray platforms (default). 
 
 ```sh
-Rscript J_statistic.R --snp ./example/input/example_wgs.csv --cnv ./example/input/example_CNV.csv --output ./example/example_use_case_4 --wgs_file ./example/input/example_genome.csv --wgs_nsample 500000
+Rscript J_statistic.R --snp_file ./example/input/example_wgs.csv --cnv_file ./example/input/example_CNV.csv --output_dir ./example/example_use_case_4 --wgs_file ./example/input/example_genome.csv --wgs_nsample 500000
 ```
 
 The output data for Example Use Case 1-3 can be found open-access on Zenodo: <a href="https://doi.org/10.5281/zenodo.5804599"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5804599.svg" alt="DOI"></a>
