@@ -66,7 +66,7 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 
 The `--max_distance` and `--interval_distance` parameters set the maximum distance and step size to test for existence of SNP clustering and SNP-CNV association. Shown below is a visualization of different `--max_distance` and `--interval_distance` parameters. 
 
-# <img src="https://github.com/HillLab/J-statistic/blob/main/J_statistic_Grid_Points_Figure.jpg" alt="Grid Points Figure" width="1000" style="float: right;"/>
+# <img src="https://github.com/HillLab/J-statistic/blob/main/example/J_statistic_Grid_Points_Figure.jpg" alt="Grid Points Figure" width="1000" style="float: right;"/>
 
 The `--wgs_file` and `--wgs_nsample` parameters must only be set when using whole genome or whole exome sequencing input data. See `./example/input/example_exome.csv` and `./example/input/example_genome.csv` for an example of the format and required fields of the `--wgs_file` file needed.
 
