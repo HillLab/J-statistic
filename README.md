@@ -211,8 +211,8 @@ The output data for Example Use Case 1-3 can be found open-access on Zenodo: <a 
 │   └── input                                                                     // Directory containing example input SNP and CNV files. 
 │   │   └── example_CNV.csv                                                       // Example SNP file used as input into J-statistic script. 
 │   │   └── example_SNP.csv                                                       // Example CNV file used as input into J-statistic script. 
-│   │   └── example_exome.csv                                                     // Chromosome and base pair start/end locations of all human exome segments. 
-│   │   └── example_genome.csv                                                    // Chromosome and base pair start/end locations of all human chromosomes. 
+│   │   └── example_exome.csv                                                     // Chromosome and base pair start/end locations of all GChr38 human exome segments. 
+│   │   └── example_genome.csv                                                    // Chromosome and base pair start/end locations of all GChr38 human chromosomes. 
 │   └── output                                                                    // Directory containing example output summary statistics and Rainfall, Rainbow, and J-statistic plots. 
 │   │   └── SNP_mDIV_A1.SNP09_319_111109                                          // Directory containing summary statistics and plots for SNP_mDIV_A1.SNP09_319_111109 sample. 
 │   │   └── SNP_mDIV_A1.SNP09_319_111109.csv                                      // Processed data combining SNP and CNV input files. 
