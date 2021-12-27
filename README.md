@@ -110,7 +110,7 @@ When using WGS/WES data as input into the `J-statistic.R` script, three changes 
 
 ##### Parameter: `--snp_file`
 
-For WGS/WES input data, the SNP input file must contain only single base mutations that exist (denoted by `1`) in at least one of the samples, unlike the SNP input data for microarray probes. Thus, each mutation (row) in the SNP input file must have at least one `1` value in at least on the samples (column), see below for an example SNP input file. 
+For WGS/WES input data, the SNP input file must contain only single base mutations that exist (denoted by `1`) in at least one of the samples, unlike the SNP input data for microarray probes. Thus, each mutation (row) in the SNP input file must have at least one `1` value in at least one of the samples (column), see below for an example SNP input file. 
 
 SNP.Chromosome | Position | SNP_mDIV_A1 | SNP_mDIV_C4
 --- | --- | --- | ---
