@@ -31,9 +31,9 @@ option_list = list(
               help="Absolute file path of CNV calls (CSV file).", metavar="CNV_CALL_FILE_PATH"),
   make_option(c("-o", "--output_dir"), type="character", default=NULL, 
               help="Absolute file path of output directory.", metavar="OUTPUT_DIRECTORY_FILE_PATH"),
-  make_option(c("-r", "--nrun"), type="integer", default=10, 
+  make_option(c("-r", "--nrun"), type="integer", default=1000, 
               help="Number of bootstrap simulations/", metavar="NUMBER_OF_RUNS"),
-  make_option(c("-h", "--min_snp"), type="integer", default=1000, 
+  make_option(c("-h", "--min_snp"), type="integer", default=10, 
               help="Minimum number of SNPs.", metavar="MIN_NUMBER_OF_SNPS"),
   make_option(c("-z", "--seed"), type="integer", default=12345, 
               help="Random seed.", metavar="SEED"),
@@ -48,9 +48,9 @@ option_list = list(
   make_option(c("-a", "--alpha"), type="numeric", default=0.05, 
               help="Alpha value for significance threshold.", metavar="ALPHA"),
   make_option(c("-w", "--wgs_file"), type="character", default=NULL, 
-              help="Start and stop coordinates for all segments in WGS or WES data.", metavar="WGS_WES"),
+              help="Absolute file path of file with start and stop coordinates for all segments in whole genome/exome (CSV file).", metavar="WGS_WES"),
   make_option(c("-x", "--wgs_nsample"), type="integer", default=500000, 
-              help="Number of randomly sampled locations in WGS or WES segments for null distribution estimate.", metavar="WGS_WES_nsample")
+              help="Number of randomly sampled locations in whole genome/exome segments for mutation position null distribution estimate.", metavar="WGS_WES_nsample")
 )
 
 # Parse user-specified parameters in terminal as vector
