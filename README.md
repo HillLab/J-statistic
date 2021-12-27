@@ -132,9 +132,7 @@ Chromosome | Start | End
 
 ##### Parameter: `--wgs_nsample`
 
-For WGS/WES input data, possible base pair locations in whole genome/exome segments are randomly sampled to generate a null distribution of single base mutation positions to test for SNP cluster existence and SNP-CNV association. Generally, a random sample of 300000 base pair locations (~0.01% of the human whole genome) for whole genome input data or a random sample of 3000 base pair locations (~0.01% of the human whole exome) for whole exome input data is recommended.
-
-| Default: 300000; Recommended Range: 100000-1000000 for WGS and 1000-10000 for WES
+For WGS/WES input data, possible base pair locations in whole genome/exome segments are randomly sampled to generate a null distribution of single base mutation positions to test for SNP cluster existence and SNP-CNV association. Generally, a minimum random sample of 100000 base pair locations for whole genome input data or a minimum random sample of 10000 base pair locations for whole exome input data is recommended.
 
 ## Output
 
