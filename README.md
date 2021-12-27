@@ -62,7 +62,7 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 -j | --cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
 -a | --alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
 -w | --wgs_file | Character | Absolute file path of file with start and stop coordinates for all segments in whole genome/exome (CSV file) | User-specified file path (Mandatory argument for WGS/WES input data; Null argument for microarray probe input data)
--x | --wgs_nsample | Integer | Number of randomly sampled locations in whole genome/exome segments for mutation position null distribution estimate. | Default: 300000; Recommended Range: 100000-1000000 for WGS and 1000-10000 for WES
+-x | --wgs_nsample | Integer | Number of randomly sampled locations in whole genome/exome segments for mutation position null distribution estimate. | Default: 500000; Recommended Range: 100000-1000000 for WGS and 10000-100000 for WES
 
 The `--max_distance` and `--interval_distance` parameters set the maximum distance and step size to test for existence of SNP clustering and SNP-CNV association. Shown below is a visualization of different `--max_distance` and `--interval_distance` parameters. 
 
@@ -74,19 +74,25 @@ The `--wgs_file` and `--wgs_nsample` parameters must only be set when using whol
 
 The expected input into the `J-statistic.R` script is one SNP file in CSV format and one CNV file in CSV format. Examples of a correctly formatted SNP and CNV input file can be found in `./example/input`. See Section `Example Dataset and Tutorial` to run this example data. The required format, column names, and data fields for custom SNP and CNV input is described below.
 
-### SNP Input File
-The SNP input file requires a unique identifier for each SNP (ID), the chromosome where the SNP exists (SNP.Chromosome), the base position on the chromosome where the SNP exists (Position), and a binary matrix for each sample (e.g. SNP_mDIV_A1 and SNP_mDIV_C4). An unlimited number of samples can be included in one SNP input file, where SNPs associated with each sample is represented by one unique column in the SNP input file.
+### SNP Input File 
 
-The binary matrix for each sample column (e.g. SNP_mDIV_A1 and SNP_mDIV_C4) uses the integer value of `1` to show that a SNP exists in the sample and the integer value of `0` to show that a SNP does not exist in the sample. In the example SNP input file below, the JAX00000002 SNP only exists in SNP_mDIV_A1, the JAX00000003 SNP only exists in SNP_mDIV_C4, and the JAX00240566 SNP does not exist in either SNP_mDIV_A1 or SNP_mDIV_C4.  
+##### Parameter: `--snp_file`
 
-ID | SNP.Chromosome | Position | SNP_mDIV_A1 | SNP_mDIV_C4
---- | --- | --- | --- | ---
-JAX00000002 | 1 | 30460970 | 1 | 0
-JAX00000003 | 1 | 30461840 | 0 | 1
-JAX00240566 | 1 | 30491060 | 0 | 0
+The SNP input file requires the chromosome where the SNP exists (SNP.Chromosome), the base position on the chromosome where the SNP exists (Position), and a binary matrix for each sample (e.g. SNP_mDIV_A1 and SNP_mDIV_C4). An unlimited number of samples can be included in one SNP input file, where SNPs associated with each sample is represented by one unique column in the SNP input file. 
+
+The binary matrix for each sample column (e.g. SNP_mDIV_A1 and SNP_mDIV_C4) uses the integer value of `1` to show that a SNP exists in the sample and the integer value of `0` to show that a SNP does not exist in the sample. Some SNPs may not exist (denoted by `0`) in any of the samples. In the example SNP input file below, the Chr. 1 (30460970) SNP only exists in SNP_mDIV_A1, the Chr. 1 (30461840) SNP only exists in SNP_mDIV_C4, and the Chr. 1 (30491060) SNP does not exist in either SNP_mDIV_A1 or SNP_mDIV_C4.  
+
+SNP.Chromosome | Position | SNP_mDIV_A1 | SNP_mDIV_C4
+--- | --- | --- | ---
+1 | 30460970 | 1 | 0
+1 | 30461840 | 0 | 1
+1 | 30491060 | 0 | 0
 ... | ... | ... | ... | ...
 
 ### CNV Input File
+
+##### Parameter: `--cnv_file`
+
 The CNV input file requires the chromosome where the CNV exists (CNV.Chromosome), the start base position of the CNV segment (Start), the end base position of the CNV segment (End), and the sample name (Sample). An unlimited number of samples can be included in one CNV input file, where CNVs associated with each sample is represented by one or more rows in the CNV input file.
 
 In the example CNV input file below, one CNV on Chromosome 1 from 30688847-30934770 base position is observed in Sample SNP_mDIV_A1. 
@@ -98,6 +104,38 @@ CNV.Chromosome | Start | End | Sample
 1 | 132977602 | 133459657 | SNP_mDIV_C4 
 ... | ... | ... | ...
  
+### Optional: WGS/WES Input Data
+
+When using WGS/WES data as input into the `J-statistic.R` script, three changes to the parameters and input data must be made. 
+
+##### Parameter: `--snp_file`
+
+For WGS/WES input data, the SNP input file must contain only single base mutations that exist (denoted by `1`) in at least one of the samples, unlike the SNP input data for microarray probes. Thus, each mutation (row) in the SNP input file must have at least one `1` value in at least on the samples (column), see below for an example SNP input file. 
+
+SNP.Chromosome | Position | SNP_mDIV_A1 | SNP_mDIV_C4
+--- | --- | --- | ---
+1 | 30460970 | 1 | 0
+1 | 30461840 | 0 | 1
+1 | 30491060 | 1 | 1
+... | ... | ... | ... | ...
+
+##### Parameter: `--wgs_file `
+
+For WGS/WES input data, a file that describes the start (Start) and stop (Stop) base pair locations as well as chromosome (Chromosome) of each possible segment where single base mutations may be observed is required. See `./example/input/example_exome.csv` and `./example/input/example_genome.csv` for an example of the format and required fields of the `--wgs_file` file needed. In the example WGS/WES input file below, 
+
+Chromosome | Start | End
+--- | --- | ---
+1 | 69090 | 70008
+1 | 450739 | 451678
+1 | 685715 | 686654
+... | ... | ...
+
+##### Parameter: `--wgs_nsample`
+
+For WGS/WES input data, possible base pair locations in whole genome/exome segments are randomly sampled to generate a null distribution of single base mutation positions to test for SNP cluster existence and SNP-CNV association. Generally, a random sample of 300000 base pair locations (~0.01% of the human whole genome) for whole genome input data or a random sample of 3000 base pair locations (~0.01% of the human whole exome) for whole exome input data is recommended.
+
+| Default: 300000; Recommended Range: 100000-1000000 for WGS and 1000-10000 for WES
+
 ## Output
 
 Using SNP and CNV data from two samples (Sample 1 and Sample 2) as input, the expected structure of the `J-statistic.R` script output in the user-specified directory is shown.
@@ -158,7 +196,13 @@ Example Use Case 3. Test for SNP cluster existence and SNP-CNV association using
 Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/example_use_case_3 --alpha 0.10 
 ```
 
-The output data for each of the 3 unique example use cases can be found open-access on Zenodo: <a href="https://doi.org/10.5281/zenodo.5804599"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5804599.svg" alt="DOI"></a>
+Example Use Case 4. Test for SNP cluster existence and SNP-CNV association using WGS single base mutation data instead of SNP data from microarray platforms (default). 
+
+```sh
+Rscript J_statistic.R --snp ./example/input/example_wgs.csv --cnv ./example/input/example_CNV.csv --output ./example/example_use_case_4 --wgs_file ./example/input/example_genome.csv --wgs_nsample 500000
+```
+
+The output data for Example Use Case 1-3 can be found open-access on Zenodo: <a href="https://doi.org/10.5281/zenodo.5804599"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5804599.svg" alt="DOI"></a>
 
 ## Structure of J-statistic package
 <pre>
@@ -169,6 +213,8 @@ The output data for each of the 3 unique example use cases can be found open-acc
 │   └── input                                                                     // Directory containing example input SNP and CNV files. 
 │   │   └── example_CNV.csv                                                       // Example SNP file used as input into J-statistic script. 
 │   │   └── example_SNP.csv                                                       // Example CNV file used as input into J-statistic script. 
+│   │   └── example_exome.csv                                                     // Chromosome and base pair start/end locations of all human exome segments. 
+│   │   └── example_genome.csv                                                    // Chromosome and base pair start/end locations of all human chromosomes. 
 │   └── output                                                                    // Directory containing example output summary statistics and Rainfall, Rainbow, and J-statistic plots. 
 │   │   └── SNP_mDIV_A1.SNP09_319_111109                                          // Directory containing summary statistics and plots for SNP_mDIV_A1.SNP09_319_111109 sample. 
 │   │   └── SNP_mDIV_A1.SNP09_319_111109.csv                                      // Processed data combining SNP and CNV input files. 
