@@ -86,7 +86,13 @@ interval_distance = opt$association_interval_distance
 cluster_max_distance = opt$cluster_max_distance
 cluster_interval_distance = opt$cluster_interval_distance
 alpha = opt$alpha
-wgs = read.csv(opt$wgs,check.names=FALSE)
+
+if(is.null(opt$wgs_file)){
+  wgs = NULL
+}else{
+  wgs = read.csv(opt$wgs_file,check.names=FALSE)
+}
+
 wgs_nsample = opt$wgs_nsample
 
 ########################################################
@@ -129,20 +135,20 @@ for (i in 3:ncol(calls)){
       }
       counter <- counter + 1
     }
-    
+
     # Outer join of input SNP data (observed mutations) and randomly sampled locations (null distribution of mutations)
     snpData <- cbind(data.frame(unlist(null_chr)), data.frame(unlist(null_pos)))
     colnames(snpData) <- c("SNP.Chromosome", "Position")
-    snpData = merge(snpData, snpData_input, by=c("SNP.Chromosome", "Position"), all = TRUE)
-    snpData[, 3][is.na(snpData[, 3])] <- 0
+    snpData_input = merge(snpData, snpData_input, by=c("SNP.Chromosome", "Position"), all = TRUE)
+    snpData_input[, 3][is.na(snpData_input[, 3])] <- 0
   }
 
   #######################################################
   #Set up SNP input data for microarray probe experiment#
   #######################################################
-  
+
   # Remove all SNPs found in X, Y, and M chromosomes from downstream statistical analysis
-  snpData <- snpData[grep("X|Y|M",snpData_input$'SNP.Chromosome', invert=TRUE),]
+  snpData <- snpData_input[grep("X|Y|M",snpData_input$'SNP.Chromosome', invert=TRUE),]
   sampleName <- colnames(snpData)[3]
 
   # Remove all CNVs found in X, Y, and M chromosomes from downstream statistical analysis
