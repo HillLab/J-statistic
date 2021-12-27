@@ -50,22 +50,25 @@ Summary of the different arguments that `J-statistic.R` uses as input. The scrip
 
 Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Description | Argument Range 
 --- | --- | --- | --- | ---
--s | --snp | Character | Absolute file path of SNP calls (CSV file) | User-specified file path
--c | --cnv | Character | Absolute file path of CNV calls (CSV file) | User-specified file path
--o | --output | Character | Absolute file path of output directory | User-specified file path
--r | --nrun | Integer | Number of bootstrap simulations |  Default:10 ; Recommended Range: 10-100
+-s | --snp_file | Character | Absolute file path of SNP calls (CSV file) | User-specified file path
+-c | --cnv_file | Character | Absolute file path of CNV calls (CSV file) | User-specified file path
+-o | --output_dir | Character | Absolute file path of output directory | User-specified file path
+-r | --nrun | Integer | Number of bootstrap simulations |  Default:1000 ; Recommended Range: 1000-10000
 -h | --min_snp | Integer | Minimum number of SNPs |  Default:10 ; Recommended Range: 10-100
--x | --seed | Integer | Number of bootstrap simulations |  Default:12345
+-z | --seed | Integer | Number of bootstrap simulations |  Default:12345
 -m | --assocation_max_distance | Integer | Maximum distance between SNPs and CNVs to test association between SNPs and CNVs. | Default:10000000; Recommended Range: 1000000-50000000
 -i | --association_interval_distance | Integer | Interval step size to test association between SNPs and CNVs. | Default: 5000; Recommended Range: 1000-10000
 -n | --cluster_max_distance | Integer | Maximum distance between SNPs to test for existence of SNP clusters. | Default:100000; Recommended Range: 10000-500000
 -j | --cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
 -a | --alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
+-w | --wgs_file | Character | Absolute file path of file with start and stop coordinates for all segments in whole genome/exome (CSV file) | User-specified file path (Mandatory argument for WGS/WES input data; Null argument for microarray probe input data)
+-x | --wgs_nsample | Integer | Number of randomly sampled locations in whole genome/exome segments for mutation position null distribution estimate. | Default: 300000; Recommended Range: 100000-1000000 for WGS and 1000-10000 for WES
 
 The `--max_distance` and `--interval_distance` parameters set the maximum distance and step size to test for existence of SNP clustering and SNP-CNV association. Shown below is a visualization of different `--max_distance` and `--interval_distance` parameters. 
 
 # <img src="https://github.com/HillLab/J-statistic/blob/main/J_statistic_Grid_Points_Figure.jpg" alt="Grid Points Figure" width="1000" style="float: right;"/>
 
+The `--wgs_file` and `--wgs_nsample` parameters must only be set when using whole genome or whole exome sequencing input data. See `./example/input/example_exome.csv` and `./example/input/example_genome.csv` for an example of the format and required fields of the `--wgs_file` file needed.
 
 ## Input
 
@@ -86,7 +89,7 @@ JAX00240566 | 1 | 30491060 | 0 | 0
 ### CNV Input File
 The CNV input file requires the chromosome where the CNV exists (CNV.Chromosome), the start base position of the CNV segment (Start), the end base position of the CNV segment (End), and the sample name (Sample). An unlimited number of samples can be included in one CNV input file, where CNVs associated with each sample is represented by one or more rows in the CNV input file.
 
-In the example CNV input file below, there exists a CNV on Chromosome 1 from 30688847-30934770 base position observed in Sample SNP_mDIV_A1. 
+In the example CNV input file below, one CNV on Chromosome 1 from 30688847-30934770 base position is observed in Sample SNP_mDIV_A1. 
 
 CNV.Chromosome | Start | End | Sample
 --- | --- | --- | --- 
@@ -172,7 +175,7 @@ The output data for each of the 3 unique example use cases can be found open-acc
 │   │   └── SNP_mDIV_C4_SNP09_300_102709                                          // Directory containing summary statistics and plots for SNP_mDIV_C4_SNP09_300_102709 sample. 
 │   │   └── SNP_mDIV_C4_SNP09_300_102709.csv                                      // Processed data combining SNP and CNV input files. 
 ├── J_statistic.R                                                                 // J-statistic R script. 
-├── reference_functions.R                                                         // Supporting functions needed for J-statistic R script. 
+├── reference_functions.Rdata                                                     // Supporting functions needed for J-statistic R script. 
 </pre>
 
 ## Citing J-statistic
