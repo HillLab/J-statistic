@@ -190,7 +190,7 @@ Example Use Case 2. Test for SNP cluster existence using smaller maximum distanc
 Rscript J_statistic.R --snp_file ./example/input/example_SNP.csv --cnv_file ./example/input/example_CNV.csv --output_dir ./example/example_use_case_2 --cluster_max_distance 50000 —-cluster_interval_distance 1000 --nrun 10
 ```
 
-Example Use Case 3. Test for SNP cluster existence and SNP-CNV association using a larger alpha value than default. Low number of bootstrap simulations (`--nrun 10`) to speed up run for proof of concept. 
+Example Use Case 3. Test for SNP cluster existence and SNP-CNV association using a larger alpha value than default. Low number of bootstrap simulations (`--nrun 10`) to speed up run for proof of concept only. 
 
 ```sh
 Rscript J_statistic.R --snp_file ./example/input/example_SNP.csv --cnv_file ./example/input/example_CNV.csv --output_dir ./example/example_use_case_3 --alpha 0.10 --nrun 10
