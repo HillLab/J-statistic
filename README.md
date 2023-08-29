@@ -61,8 +61,6 @@ Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Desc
 -n | --cluster_max_distance | Integer | Maximum distance between SNPs to test for existence of SNP clusters. | Default:100000; Recommended Range: 10000-500000
 -j | --cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
 -a | --alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
--w | --wgs_file | Character | Absolute file path of file with start and stop coordinates for all segments in whole genome/exome (CSV file) | User-specified file path (Mandatory argument for WGS/WES input data; Null argument for microarray probe input data)
--x | --wgs_nsample | Integer | Number of randomly sampled locations in whole genome/exome segments for mutation position null distribution estimate. | Default: 500000; Recommended Range: 100000-1000000 for WGS and 10000-100000 for WES
 
 The `--max_distance` and `--interval_distance` parameters set the maximum distance and step size to test for existence of SNP clustering and SNP-CNV association. Shown below is a visualization of different `--max_distance` and `--interval_distance` parameters. 
 
@@ -106,36 +104,6 @@ CNV.Chromosome | Start | End | Sample
 1 | 132977602 | 133459657 | SNP_mDIV_C4 
 ... | ... | ... | ...
  
-### Optional: WGS/WES Input Data
-
-When using WGS/WES data as input into the `J-statistic.R` script, three changes to the parameters and input data must be made. 
-
-##### Parameter: `--snp_file`
-
-For WGS/WES input data, the SNP input file must contain only single base mutations that exist (denoted by `1`) in at least one of the samples, unlike the SNP input data for microarray probes. Thus, each mutation (row) in the SNP input file must have at least one `1` value in at least one of the samples (column), see below for an example SNP input file. 
-
-SNP.Chromosome | Position | SNP_mDIV_A1 | SNP_mDIV_C4
---- | --- | --- | ---
-1 | 30460970 | 1 | 0
-1 | 30461840 | 0 | 1
-1 | 30491060 | 1 | 1
-... | ... | ... | ... | ...
-
-##### Parameter: `--wgs_file `
-
-For WGS/WES input data, a file that describes the start (Start) and stop (Stop) base pair locations as well as chromosome (Chromosome) of each possible segment where single base mutations may be observed is required. See `./example/input/example_exome.csv` and `./example/input/example_genome.csv` for an example of the format and required fields of the `--wgs_file` file needed. In the example WGS/WES input file below, 
-
-Chromosome | Start | End
---- | --- | ---
-1 | 69090 | 70008
-1 | 450739 | 451678
-1 | 685715 | 686654
-... | ... | ...
-
-##### Parameter: `--wgs_nsample`
-
-For WGS/WES input data, possible base pair locations in whole genome/exome segments are randomly sampled to generate a null distribution of single base mutation positions to test for SNP cluster existence and SNP-CNV association. Generally, a minimum random sample of 100000 base pair locations for whole genome input data or a minimum random sample of 10000 base pair locations for whole exome input data is recommended.
-
 ## Output
 
 Using SNP and CNV data from two samples (Sample 1 and Sample 2) as input, the expected structure of the `J-statistic.R` script output in the user-specified directory is shown.
@@ -194,12 +162,6 @@ Example Use Case 3. Test for SNP cluster existence and SNP-CNV association using
 
 ```sh
 Rscript J_statistic.R --snp_file ./example/input/example_SNP.csv --cnv_file ./example/input/example_CNV.csv --output_dir ./example/example_use_case_3 --alpha 0.10 --nrun 10
-```
-
-Example Use Case 4. Test for SNP cluster existence and SNP-CNV association using WGS single base mutation data instead of SNP data from microarray platforms (default). 
-
-```sh
-Rscript J_statistic.R --snp_file ./example/input/example_wgs.csv --cnv_file ./example/input/example_CNV.csv --output_dir ./example/example_use_case_4 --wgs_file ./example/input/example_genome.csv --wgs_nsample 500000
 ```
 
 The output data for Example Use Case 1-3 can be found open-access on Zenodo: <a href="https://doi.org/10.5281/zenodo.5804599"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.5804599.svg" alt="DOI"></a>
