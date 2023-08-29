@@ -72,30 +72,30 @@ cat("Stage 1: Setup user-input parameters.\n")
 
 # Set up all user-specified parameters
 
-calls = read.csv("./example/input/example_SNP.csv",check.names=FALSE)
-cnvsData = read.csv("./example/input/example_CNV.csv",check.names=FALSE)
-output_directory = "./example/example_use_case_4"
-numRuns = 10
-heterozygousCallCutoff = 10
-seed = 0
-max_distance = 10000000
-interval_distance = 5000
-cluster_max_distance = 5100000
-cluster_interval_distance = 5000
-alpha = 0.05
+#calls = read.csv("./example/input/example_SNP.csv",check.names=FALSE)
+#cnvsData = read.csv("./example/input/example_CNV.csv",check.names=FALSE)
+#output_directory = "./example/example_use_case_4"
+#numRuns = 10
+#heterozygousCallCutoff = 10
+#seed = 0
+#max_distance = 10000000
+#interval_distance = 5000
+#cluster_max_distance = 5100000
+#cluster_interval_distance = 5000
+#alpha = 0.05
 
 
-#calls = read.csv(opt$snp_file,check.names=FALSE)
-#cnvsData = read.csv(opt$cnv_file,check.names=FALSE)
-#output_directory = opt$output_dir
-#numRuns = opt$nrun
-#heterozygousCallCutoff = opt$min_snp
-#seed = opt$seed
-#max_distance = opt$association_max_distance
-#interval_distance = opt$association_interval_distance
-#cluster_max_distance = opt$cluster_max_distance
-#cluster_interval_distance = opt$cluster_interval_distance
-#alpha = opt$alpha
+calls = read.csv(opt$snp_file,check.names=FALSE)
+cnvsData = read.csv(opt$cnv_file,check.names=FALSE)
+output_directory = opt$output_dir
+numRuns = opt$nrun
+heterozygousCallCutoff = opt$min_snp
+seed = opt$seed
+max_distance = opt$association_max_distance
+interval_distance = opt$association_interval_distance
+cluster_max_distance = opt$cluster_max_distance
+cluster_interval_distance = opt$cluster_interval_distance
+alpha = opt$alpha
 
 
 ########################################################
@@ -121,7 +121,9 @@ for (i in 3:ncol(calls)){
   #######################################################
 
   # Remove all SNPs found in X, Y, and M chromosomes from downstream statistical analysis
-  snpData <- snpData_input[grep("X|Y|M",snpData_input$'SNP.Chromosome', invert=TRUE),]
+  #snpData <- snpData_input[grep("X|Y|M",snpData_input$'SNP.Chromosome', invert=TRUE),]
+  
+  snpData <- snpData_input
   sampleName <- colnames(snpData)[3]
 
   # Remove all CNVs found in X, Y, and M chromosomes from downstream statistical analysis
