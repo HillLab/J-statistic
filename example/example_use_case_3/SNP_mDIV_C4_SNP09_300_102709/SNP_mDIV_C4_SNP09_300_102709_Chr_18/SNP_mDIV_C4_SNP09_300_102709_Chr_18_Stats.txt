@@ -1,0 +1,11 @@
+SNP_mDIV_C4_SNP09_300_102709
+Chromosome
+18
+ p.KS.unadjusted p.CvM.unadjusted     rejection.KS    rejection.CvM 
+      0.09090909       0.09090909       1.00000000       1.00000000 
+p.J.unadjusted    rejection.J 
+    0.09090909     1.00000000 
+numCNVs
+1
+Association
++

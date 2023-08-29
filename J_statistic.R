@@ -12,7 +12,7 @@ library(optparse)
 
 github_packages <- setdiff("rowr", rownames(installed.packages()))
 if (length(github_packages) > 0) {
-  install_github("cvarrichio/rowr")
+  install_github("cvarrichio/rowr", force=TRUE)
 }
 
 library(rowr)
@@ -47,10 +47,6 @@ option_list = list(
               help="Interval distance for SNP clustering test.", metavar="SNP_CLUSTER_INTERVAL_DISTANCE"),
   make_option(c("-a", "--alpha"), type="numeric", default=0.05, 
               help="Alpha value for significance threshold.", metavar="ALPHA"),
-  make_option(c("-w", "--wgs_file"), type="character", default=NULL, 
-              help="Absolute file path of file with start and stop coordinates for all segments in whole genome/exome (CSV file).", metavar="WGS_WES"),
-  make_option(c("-x", "--wgs_nsample"), type="integer", default=500000, 
-              help="Number of randomly sampled locations in whole genome/exome segments for mutation position null distribution estimate.", metavar="WGS_WES_nsample")
 )
 
 # Parse user-specified parameters in terminal as vector
@@ -75,25 +71,32 @@ if(is.null(opt$output)) {
 cat("Stage 1: Setup user-input parameters.\n")
 
 # Set up all user-specified parameters
-calls = read.csv(opt$snp_file,check.names=FALSE)
-cnvsData = read.csv(opt$cnv_file,check.names=FALSE)
-output_directory = opt$output_dir
-numRuns = opt$nrun
-heterozygousCallCutoff = opt$min_snp
-seed = opt$seed
-max_distance = opt$association_max_distance
-interval_distance = opt$association_interval_distance
-cluster_max_distance = opt$cluster_max_distance
-cluster_interval_distance = opt$cluster_interval_distance
-alpha = opt$alpha
 
-if(is.null(opt$wgs_file)){
-  wgs = NULL
-}else{
-  wgs = read.csv(opt$wgs_file,check.names=FALSE)
-}
+calls = read.csv("./example/input/example_SNP.csv",check.names=FALSE)
+cnvsData = read.csv("./example/input/example_CNV.csv",check.names=FALSE)
+output_directory = "./example/example_use_case_4"
+numRuns = 10
+heterozygousCallCutoff = 10
+seed = 0
+max_distance = 10000000
+interval_distance = 5000
+cluster_max_distance = 5100000
+cluster_interval_distance = 5000
+alpha = 0.05
 
-wgs_nsample = opt$wgs_nsample
+
+#calls = read.csv(opt$snp_file,check.names=FALSE)
+#cnvsData = read.csv(opt$cnv_file,check.names=FALSE)
+#output_directory = opt$output_dir
+#numRuns = opt$nrun
+#heterozygousCallCutoff = opt$min_snp
+#seed = opt$seed
+#max_distance = opt$association_max_distance
+#interval_distance = opt$association_interval_distance
+#cluster_max_distance = opt$cluster_max_distance
+#cluster_interval_distance = opt$cluster_interval_distance
+#alpha = opt$alpha
+
 
 ########################################################
 #Stage 2: Pre-process input data for J-statistic script#
@@ -113,36 +116,6 @@ for (i in 3:ncol(calls)){
 
   snpData_input <- calls[,c(1,2,i)]
   
-  ##############################################
-  #Set up SNP input data for WGS/WES experiment#
-  ##############################################
-  
-  if (!is.null(wgs)){
-    # Proportionally (based on segment length) sample random base locations 
-    wgs$Length <- wgs$End - wgs$Start
-    wgs_total_length <- sum(wgs$Length)
-    wgs_index_sample = sample(as.numeric(rownames(wgs)), size = wgs_nsample, replace = TRUE,  prob = (wgs$Length / wgs_total_length)) 
-    
-    # Generate dataframe of wgs_nsample length with randomly sampled chromosome and base locations          
-    counter <- 1
-    null_pos <- list()
-    null_chr <- list()
-    for (y in wgs_index_sample){
-      null_pos[[counter]] <- floor(runif(1, wgs[y,"Start"], wgs[y,"End"]-1))
-      null_chr[[counter]] <- wgs[y,"Chromosome"]
-      if (counter == wgs_nsample)  {
-        break
-      }
-      counter <- counter + 1
-    }
-
-    # Outer join of input SNP data (observed mutations) and randomly sampled locations (null distribution of mutations)
-    snpData <- cbind(data.frame(unlist(null_chr)), data.frame(unlist(null_pos)))
-    colnames(snpData) <- c("SNP.Chromosome", "Position")
-    snpData_input = merge(snpData, snpData_input, by=c("SNP.Chromosome", "Position"), all = TRUE)
-    snpData_input[, 3][is.na(snpData_input[, 3])] <- 0
-  }
-
   #######################################################
   #Set up SNP input data for microarray probe experiment#
   #######################################################
@@ -200,6 +173,7 @@ stage_3_pb_counter = 0
 # Generates Rainbow, Rainfall, and J-statistic plots along with summary statistics to test for the existence of SNP clusters and association between SNPs and CNVs 
 for (file in list.files(path=output_directory, pattern=".csv", all.files=TRUE, full.names=TRUE)){
 
+  print(file)
   # Read in merged SNP and CNV dataframe
   cancer.data <- read.csv(paste0(file), header=T)
   
