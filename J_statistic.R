@@ -33,7 +33,7 @@ option_list = list(
               help="Absolute file path of output directory.", metavar="OUTPUT_DIRECTORY_FILE_PATH"),
   make_option(c("-r", "--nrun"), type="integer", default=1000, 
               help="Number of bootstrap simulations/", metavar="NUMBER_OF_RUNS"),
-  make_option(c("-h", "--min_snp"), type="integer", default=10, 
+  make_option(c("-y", "--min_snp"), type="integer", default=10, 
               help="Minimum number of SNPs.", metavar="MIN_NUMBER_OF_SNPS"),
   make_option(c("-z", "--seed"), type="integer", default=12345, 
               help="Random seed.", metavar="SEED"),
@@ -49,12 +49,12 @@ option_list = list(
               help="Alpha value for significance threshold.", metavar="ALPHA"),
   make_option(c("-w", "--wgs_file"), type="character", default=NULL, 
               help="Absolute file path of file with start and stop coordinates for all segments in whole genome/exome (CSV file).", metavar="WGS_WES"),
-  make_option(c("-x", "--wgs_nsample"), type="integer", default=0, 
+  make_option(c("-x", "--wgs_nsample"), type="integer", default=500000, 
               help="Number of randomly sampled locations in whole genome/exome segments for mutation position null distribution estimate.", metavar="WGS_WES_nsample")
 )
 
 # Parse user-specified parameters in terminal as vector
-opt_parser = OptionParser(option_list=option_list, add_help_option=FALSE);
+opt_parser = OptionParser(option_list=option_list, add_help_option=TRUE);
 opt = parse_args(opt_parser)
 
 # CHECK: Mandatory SNP file path argument
@@ -76,41 +76,26 @@ cat("Stage 1: Setup user-input parameters.\n")
 
 # Set up all user-specified parameters
 
-calls = read.csv("./example/input/CCLE_CRC_example_SNV.csv",check.names=FALSE)
-cnvsData = read.csv("./example/input/CCLE_CRC_example_CNV.csv",check.names=FALSE)
-output_directory = "./example/example_use_case_4"
-numRuns = 10
-heterozygousCallCutoff = 10
-seed = 0
-max_distance = 10000000
-interval_distance = 5000
-cluster_max_distance = 5100000
-cluster_interval_distance = 5000
-alpha = 0.05
+calls = read.csv(opt$snp_file,check.names=FALSE)
+cnvsData = read.csv(opt$cnv_file,check.names=FALSE)
+output_directory = opt$output_dir
+numRuns = opt$nrun
+heterozygousCallCutoff = opt$min_snp
+seed = opt$seed
+max_distance = opt$association_max_distance
+interval_distance = opt$association_interval_distance
+cluster_max_distance = opt$cluster_max_distance
+cluster_interval_distance = opt$cluster_interval_distance
+alpha = opt$alpha
 
-
-#calls = read.csv(opt$snp_file,check.names=FALSE)
-#cnvsData = read.csv(opt$cnv_file,check.names=FALSE)
-#output_directory = opt$output_dir
-#numRuns = opt$nrun
-#heterozygousCallCutoff = opt$min_snp
-#seed = opt$seed
-#max_distance = opt$association_max_distance
-#interval_distance = opt$association_interval_distance
-#cluster_max_distance = opt$cluster_max_distance
-#cluster_interval_distance = opt$cluster_interval_distance
-#alpha = opt$alpha
-
-
-#if(is.null(opt$wgs_file)){
-#  wgs = NULL
-#}else{
-#  wgs = read.csv(opt$wgs_file,check.names=FALSE)
-#}
-#wgs_nsample = opt$wgs_nsample
-
-wgs = read.csv("./example/input/example_genome.csv",check.names=FALSE)
-wgs_nsample = 0
+if(is.null(opt$wgs_file)){
+  wgs = NULL
+}else{
+  wgs = read.csv(opt$wgs_file,check.names=FALSE)
+}
+wgs = NULL
+wgs_nsample = opt$wgs_nsample
+wgs_nsample = 500000
 
 ########################################################
 #Stage 2: Pre-process input data for J-statistic script#
@@ -156,8 +141,6 @@ for (i in 3:ncol(calls)){
     # Outer join of input SNP data (observed mutations) and randomly sampled locations (null distribution of mutations)
     snpData <- cbind(data.frame(unlist(null_chr)), data.frame(unlist(null_pos)))
     colnames(snpData) <- c("SNP.Chromosome", "Position")
-    
-    # Merge
     snpData_input = merge(snpData, snpData_input, by=c("SNP.Chromosome", "Position"), all = TRUE)
     snpData_input[, 3][is.na(snpData_input[, 3])] <- 0
   }
@@ -212,13 +195,13 @@ cat("Stage 3: J-statistic calculation and plots. \n")
 excel_data<-data.frame(matrix(ncol=6,nrow=0, dimnames=list(NULL, c('Chromosome', 'p.KS', 'p.J', 'Num_CNV', 'SNP_CNV_Association', 'Sample'))))
 
 # Initialize Stage 3 Progress Bar
-stage_3_pb <- txtProgressBar(min = 0, max = length(list.files(path=output_directory, pattern=".csv", all.files=TRUE, full.names=TRUE)), style = 3)
+stage_3_pb <- txtProgressBar(min = 0, max = length(list.files(path = output_directory, pattern= paste0('^(SNP_).*(.csv)$'), full.names=TRUE)), style = 3)
 stage_3_pb_counter = 0
 
 # Reads processed input files in folder in a loop
 # Generates Rainbow, Rainfall, and J-statistic plots along with summary statistics to test for the existence of SNP clusters and association between SNPs and CNVs 
 for (file in list.files(path=output_directory, pattern=".csv", all.files=TRUE, full.names=TRUE)){
-  start.time <- Sys.time()
+
   print(file)
   # Read in merged SNP and CNV dataframe
   cancer.data <- read.csv(paste0(file), header=T)
@@ -237,213 +220,209 @@ for (file in list.files(path=output_directory, pattern=".csv", all.files=TRUE, f
 
   # Generate statistics and plots for each chromosome with SNPs (above cutoff) and CNVs
   for (i in as.numeric(na.omit(unique(cancer.data[["SNP.Chromosome"]])))){
+
+    #########################
+    #Stage 3.1 Rainfall Plot#
+    #########################
     
-    tryCatch({
+    # Subset merged dataframe for one chromosome
+    cancer.data.19 <- subset(cancer.data, SNP.Chromosome == i)
+    
+    # Get the set of all SNPs (marked with either 0 or 1)
+    probe.set.19 <- cancer.data.19$Position
+    
+    # Get the subset of SNPs of interest (marked with only 1)
+    SNP.example <- sort(as.numeric(na.omit(probe.set.19[which(cancer.data.19[,fileNoSuffix] == 1)])))
 
-      #########################
-      #Stage 3.1 Rainfall Plot#
-      #########################
-      
-      # Subset merged dataframe for one chromosome
-      cancer.data.19 <- subset(cancer.data, SNP.Chromosome == i)
-      
-      # Get the set of all SNPs (marked with either 0 or 1)
-      probe.set.19 <- cancer.data.19$Position
-      
-      # Get the subset of SNPs of interest (marked with only 1)
-      SNP.example <- sort(as.numeric(na.omit(probe.set.19[which(cancer.data.19[,fileNoSuffix] == 1)])))
-  
-      # If chromosome has no CNVs, then just make empty folder and note on output summary statistic table 
-      if (!(i %in% (unique(cancer.data$CNV.Chromosome)))){
-        dir.create(paste0(output_directory, '/', fileNoSuffix,'/',fileNoSuffix,'_Chr_', i,'-NoCNVs'), showWarnings = FALSE) 
-        excel_table[i,]<-c(i, "N", "N", 0, "No_CNVs",  fileNoSuffix)
-        next
-      }
-      
-      # Number of CNVs for each chromosome
-      numberCNVs<- sum((cancer.data$CNV.Chromosome[!is.na(cancer.data$CNV.Chromosome)])==i)
-      
-      # If less than threshold cutoff of SNPs, skip the statistical analyses and plotting for the chromosome
-      if (length(SNP.example)<= heterozygousCallCutoff){
-        dir.create(paste0(output_directory, '/', fileNoSuffix,'/',fileNoSuffix,'_Chr_', i,'-LessThanHetCutoff'), showWarnings = FALSE) 
-        excel_table[i,]<-c(i, "<", "<", numberCNVs, "< Min_SNP_Cutoff", fileNoSuffix)
-        next
-      }
-  
-      dir.create(paste0(output_directory, '/', fileNoSuffix,'/',fileNoSuffix,'_Chr_', i), showWarnings = FALSE) 
-  
-      # Save Rainfall Plot as PDF for each chromosome
-      pdf(file=paste0(output_directory,'/',fileNoSuffix,'/',fileNoSuffix,'_Chr_', i,'/',fileNoSuffix,'_Chr_', i,'_Rainfall_Plot.pdf'))
-      plot(log10(diff(SNP.example)) ~ SNP.example[-1], pch = 16, ylab="", xlab="")
-      
-      # Rainfall Plot Label on X-axis
-      mtext(1, text = bquote("Chromosome Position (bp)"), cex = 1.2, line = 3)
-      
-      # Rainfall Plot Label on Y-axis
-      mtext(2, text = "Distance between SNPs", cex = 1.2, line = 2.5)
-      
-      # Rainfall Plot Title
-      title(main = paste0(fileNoSuffix,"_Chr_", i))
-      
-      dev.off()
-      
-      ###########################################################
-      #Stage 3.2 Rainbow Plot and Test for SNP Cluster Existence#
-      ###########################################################
-      
-      # Set up sequence of grid points for SNP cluster test
-      grid.points <- (1: (cluster_max_distance/cluster_interval_distance)) * cluster_interval_distance
-  
-      # Directory for the output plots and statistics file to be saved
-      save.directory.SNP <- paste0(output_directory,'/',fileNoSuffix,'/',fileNoSuffix,'_Chr_', i, '/')
-     
-      # SNP Cluster RData file name 
-      file.name.SNP <- paste0(fileNoSuffix, "_Chr_",i,"_SNP_Cluster")
-  
-      # Set seed for reproducibility
-      set.seed(seed)
-      
-      # Test for existence of SNP cluster using Kolmogorov-Smirnov test
-      test.result.SNP <- SNP.cluster.test(detected.SNP = SNP.example, grid.d = grid.points, probe.set = probe.set.19, n.null = numRuns, na.rm = T, alpha = alpha)
-  
-      # Save the object test.result.SNP as the SNP Cluster RData file
-      save(test.result.SNP, file = paste(save.directory.SNP, file.name.SNP, ".RData", sep = ""))
-  
-      # Load the SNP Cluster RData file
-      load(file = paste(save.directory.SNP, file.name.SNP, ".RData", sep = ""))
-  
-      # Hypothesis test p-value of SNP cluster existence using KS test
-      test.result.SNP$test.result
-  
-      # Subset merged dataframe for chromosome-specific CNVs
-      sample.CNVs <- cancer.data
-      sample.CNVs.subset <- subset(sample.CNVs, CNV.Chromosome == i)
-      sample.CNVs.start <- sample.CNVs.subset$Start
-      sample.CNVs.end <-sample.CNVs.subset$End
-      sample.CNVs.good <- matrix(c(sample.CNVs.start, sample.CNVs.end), ncol=2)
-      sample.CNVs.2 <- Intervals(sample.CNVs.good, closed = c( TRUE, TRUE ), type = "Z")
-  
-      # Subset merged dataframe for chromosome-specific SNPs of interest (only 1) for hypothesis test
-      sample.SNPs.subset <- cancer.data[((cancer.data[,'SNP.Chromosome'] == i) & (cancer.data[,fileNoSuffix] == 1)),]
-      sample.SNPs <- as.numeric(na.omit(sample.SNPs.subset$Position))
-  
-      # Subset merged dataframe for all chromosome-specific SNPs (0 and 1) to form null distribution 
-      sample.probe.subset <- cancer.data[(cancer.data[,'SNP.Chromosome'] == i),]
-      sample.probe <- as.numeric(na.omit(sample.probe.subset$Position))
-      
-      # Remove nans from CNVs if present 
-      sample.CNVs.2<-sample.CNVs.2[!is.na(sample.CNVs.2)]
-  
-      # Rainbow Plot
-      SNP.CNV.dist <- distance_to_nearest(sample.SNPs, sample.CNVs.2)
-      
-      pdf(file=paste0(output_directory, "/", fileNoSuffix,'/',fileNoSuffix,'_Chr_', i, '/',fileNoSuffix, '_Chr_', i, '_Rainbow_Plot.pdf'))
-      
-      plot(sample.CNVs.2, axes = FALSE, y = rep(0.1, dim(sample.CNVs.2)[1]),
-           xlim = range(as.numeric(na.omit(sample.SNPs))), 
-           ylim = c(1, max(as.numeric(na.omit((ceiling(log10(SNP.CNV.dist))))))), col = 2, cex = 1.25)
-      
-      points(log10(SNP.CNV.dist) ~ sample.SNPs)
-      abline(v = apply(sample.CNVs.2, 1, mean), lty = 2, col =3, lwd = 1.5)
-      
-      # Rainbow Plot X-axis
-      axis(1, at = 2*0:10*max_distance, label = as.character(2*0:10), font = 1)  
-      
-      # Rainbow Plot Y-axis
-      axis(2, at = 0:max(as.numeric(na.omit((ceiling(log10(SNP.CNV.dist)))))), labels = c(1, sapply(1:max(as.numeric(na.omit((ceiling(log10(SNP.CNV.dist)))))), function(i) as.expression(bquote(10^ .(i))))))  # y-axis
-      
-      # Rainbow Plot Label on X-axis
-      mtext(1, text = paste("Chromosome Position (", max_distance, "bp)", sep=""), cex = 1.2, line = 3)
-      
-      # Rainbow Plot Label on Y-axis
-      mtext(2, text = "Distance from SNPs to closest CNV (bp)", cex = 1.2, line = 2.5)
-      
-      # Rainbow Plot Title
-      title(main = paste0(fileNoSuffix,"_Chr_", i))
-  
-      dev.off()
-      
-      ############################################################
-      #Stage 3.3 J Function Plot and Test for SNP-CNV Association#
-      ############################################################
-      
-      # Set up sequence of grid points for SNP-CNV association test
-      r_use_1 <- 1 : (max_distance/interval_distance) * interval_distance
-  
-      # Directory for the output plots and statistics file to be saved
-      save.directory.SNP.CNV <- paste0(output_directory,'/',fileNoSuffix,'/',fileNoSuffix,'_Chr_', i, '/')
-      
-      # SNP-CNV Association RData file name 
-      file.name.SNP.CNV <- paste0(fileNoSuffix,"_Chr_",i, "_SNP-CNV_Association")
-  
-      # Set seed for reproducibility
-      set.seed(seed)
-      test.result.SNP.CNV <- SNP.CNV.test(sample.SNPs = sample.SNPs, sample.probe = sample.probe, sample.CNVs = sample.CNVs.2, r_p = r_use_1, n.rep = numRuns, alpha = alpha)
-  
-      # Save the object test.result.SNP.CNV as the SNP-CNV Association RData file
-      save(test.result.SNP.CNV, file = paste(save.directory.SNP.CNV, file.name.SNP.CNV, ".RData", sep = ""))
-      
-      # Load the SNP-CNV Association RData file
-      load(, file = paste(save.directory.SNP.CNV, file.name.SNP.CNV, ".RData", sep = ""))
-  
-      # Negative association, larger value, tend to be farther away
-      # Positive association, smaller value, tend to be close together
-  
-      # J-function Plot
-      pdf(file=paste0(output_directory, '/',fileNoSuffix,'/',fileNoSuffix,'_Chr_', i, '/', fileNoSuffix,'_Chr_',i,'_J-statistic_Plot.pdf'))
-      plot.upper <- max(c(test.result.SNP.CNV$sample.info[["J.fun.sample"]], test.result.SNP.CNV$Null.output[["gcb.upper"]]), na.rm =  T) + 0.01
-      plot.lower <- min(c(test.result.SNP.CNV$sample.info[["J.fun.sample"]], test.result.SNP.CNV$Null.output[["gcb.lower"]]), na.rm = T) - 0.01
-      plot(test.result.SNP.CNV$sample.info[["J.fun.sample"]] ~ r_use_1, type = 'l', ylim = c(plot.lower, plot.upper), lwd = 2, xlab = 'r', ylab = 'J function', main = "J function")
-      lines(test.result.SNP.CNV$Null.output[["gcb.upper"]] ~ r_use_1, lty = 2, lwd = 2, col = 4)
-      lines(test.result.SNP.CNV$Null.output[["gcb.lower"]] ~ r_use_1, lty = 2, lwd = 2, col = 4)
-      legend("topleft", c("Observed J Function", "Global Confidence Bands"), lty = c(1,2), lwd = c(2,2), col = c(1, 4), cex=0.5)
-  
-      dev.off()
-  
-      # J-statistic association symbols
-      # +- : J function crossed both high and low global confidence bands
-      # +  : J function crossed low global confidence band
-      # -  : J function crossed high global confidence band
-      # /  : J function did not cross either high and low global confidence bands
-      graphLinePoints <- test.result.SNP.CNV$sample.info[["J.fun.sample"]]
-      graphUpperPoints <- test.result.SNP.CNV$Null.output[["gcb.upper"]]
-      graphLowerPoints <- test.result.SNP.CNV$Null.output[["gcb.lower"]]
-      
-      if ((any(graphLinePoints[-1:-100] >graphUpperPoints[-1:-100])) &
-          (any(graphLinePoints[-1:-100] <graphLowerPoints[-1:-100]))){
-        association<-'+-'
-  
-      } else if (any(graphLinePoints[-1:-100] <graphLowerPoints[-1:-100])){
-        association<-'+'
-      } else if (any(graphLinePoints[-1:-100] >graphUpperPoints[-1:-100])){
-        association<-'-'
-      } else {
-        association<-'/'  # \ is special character, need 2 to produce 1 in end 
-      }
-      
-      #if unadjusted P-value of J-statistic is greater than alpha, no association between SNPs and CNVs
-      if ((as.numeric(test.result.SNP.CNV$test.result)[1])>alpha){
-        association<-'/'
-      }
-  
-      # Output statistical results of KS (SNP cluster existence) and J-statistic (SNP-CNV association) tests to file, one output text file per chromosome per sample 
-      chars <- capture.output(cat(fileNoSuffix,'Chromosome',i,sep='\n'),print(test.result.SNP$test.result), print(test.result.SNP.CNV$test.result),
-                              cat('numCNVs',numberCNVs, sep='\n'), cat('Association',association,sep='\n'))    
-      writeLines(chars, con = file(paste0(output_directory, '/', fileNoSuffix,'/',fileNoSuffix,'_Chr_', i, '/', fileNoSuffix,'_Chr_',i,'_Stats.txt')))
-      
-      # Add statistical results to summary statistics dataframe
-      excel_table[i,]<-c(i, (as.numeric(test.result.SNP$test.result)[1]), (as.numeric(test.result.SNP.CNV$test.result)[1]), numberCNVs,association, fileNoSuffix)
-      closeAllConnections()
+    # If chromosome has no CNVs, then just make empty folder and note on output summary statistic table 
+    if (!(i %in% (unique(cancer.data$CNV.Chromosome)))){
+      dir.create(paste0(output_directory, '/', fileNoSuffix,'/',fileNoSuffix,'_Chr_', i,'-NoCNVs'), showWarnings = FALSE) 
+      excel_table[i,]<-c(i, "N", "N", 0, "No_CNVs",  fileNoSuffix)
+      next
+    }
+    
+    # Number of CNVs for each chromosome
+    numberCNVs<- sum((cancer.data$CNV.Chromosome[!is.na(cancer.data$CNV.Chromosome)])==i)
+    
+    # If less than threshold cutoff of SNPs, skip the statistical analyses and plotting for the chromosome
+    if (length(SNP.example)<= heterozygousCallCutoff){
+      dir.create(paste0(output_directory, '/', fileNoSuffix,'/',fileNoSuffix,'_Chr_', i,'-LessThanHetCutoff'), showWarnings = FALSE) 
+      excel_table[i,]<-c(i, "<", "<", numberCNVs, "< Min_SNP_Cutoff", fileNoSuffix)
+      next
+    }
 
-      },
-      
-    error = function(e){
-      message('Caught an error!')
-      print(e)
-      }
-    )
+    dir.create(paste0(output_directory, '/', fileNoSuffix,'/',fileNoSuffix,'_Chr_', i), showWarnings = FALSE) 
+
+    # Save Rainfall Plot as PDF for each chromosome
+    pdf(file=paste0(output_directory,'/',fileNoSuffix,'/',fileNoSuffix,'_Chr_', i,'/',fileNoSuffix,'_Chr_', i,'_Rainfall_Plot.pdf'))
+    plot(log10(diff(SNP.example)) ~ SNP.example[-1], pch = 16, ylab="", xlab="")
+    
+    # Rainfall Plot Label on X-axis
+    mtext(1, text = bquote("Chromosome Position (bp)"), cex = 1.2, line = 3)
+    
+    # Rainfall Plot Label on Y-axis
+    mtext(2, text = "Distance between SNPs", cex = 1.2, line = 2.5)
+    
+    # Rainfall Plot Title
+    title(main = paste0(fileNoSuffix,"_Chr_", i))
+    
+    dev.off()
+    
+    ###########################################################
+    #Stage 3.2 Rainbow Plot and Test for SNP Cluster Existence#
+    ###########################################################
+    
+    # Set up sequence of grid points for SNP cluster test
+    grid.points <- (1: (cluster_max_distance/cluster_interval_distance)) * cluster_interval_distance
+
+    # Directory for the output plots and statistics file to be saved
+    save.directory.SNP <- paste0(output_directory,'/',fileNoSuffix,'/',fileNoSuffix,'_Chr_', i, '/')
+   
+    # SNP Cluster RData file name 
+    file.name.SNP <- paste0(fileNoSuffix, "_Chr_",i,"_SNP_Cluster")
+
+    # Set seed for reproducibility
+    set.seed(seed)
+    
+    # Test for existence of SNP cluster using Kolmogorov-Smirnov test
+    test.result.SNP <- SNP.cluster.test(detected.SNP = SNP.example, 
+                                        grid.d = grid.points, 
+                                        probe.set = probe.set.19, 
+                                        n.null = numRuns, 
+                                        na.rm = T, 
+                                        alpha = alpha)
+
+    # Save the object test.result.SNP as the SNP Cluster RData file
+    save(test.result.SNP, file = paste(save.directory.SNP, file.name.SNP, ".RData", sep = ""))
+
+    # Load the SNP Cluster RData file
+    load(file = paste(save.directory.SNP, file.name.SNP, ".RData", sep = ""))
+
+    # Hypothesis test p-value of SNP cluster existence using KS test
+    test.result.SNP$test.result
+
+    # Subset merged dataframe for chromosome-specific CNVs
+    sample.CNVs <- cancer.data
+    sample.CNVs.subset <- subset(sample.CNVs, CNV.Chromosome == i)
+    sample.CNVs.start <- sample.CNVs.subset$Start
+    sample.CNVs.end <-sample.CNVs.subset$End
+    sample.CNVs.good <- matrix(c(sample.CNVs.start, sample.CNVs.end), ncol=2)
+    sample.CNVs.2 <- Intervals(sample.CNVs.good, closed = c( TRUE, TRUE ), type = "Z")
+
+    # Subset merged dataframe for chromosome-specific SNPs of interest (only 1) for hypothesis test
+    sample.SNPs.subset <- cancer.data[((cancer.data[,'SNP.Chromosome'] == i) & (cancer.data[,fileNoSuffix] == 1)),]
+    sample.SNPs <- as.numeric(na.omit(sample.SNPs.subset$Position))
+
+    # Subset merged dataframe for all chromosome-specific SNPs (0 and 1) to form null distribution 
+    sample.probe.subset <- cancer.data[(cancer.data[,'SNP.Chromosome'] == i),]
+    sample.probe <- as.numeric(na.omit(sample.probe.subset$Position))
+    
+    # Remove nans from CNVs if present 
+    sample.CNVs.2<-sample.CNVs.2[!is.na(sample.CNVs.2)]
+
+    # Rainbow Plot
+    SNP.CNV.dist <- distance_to_nearest(sample.SNPs, sample.CNVs.2)
+    
+    pdf(file=paste0(output_directory, "/", fileNoSuffix,'/',fileNoSuffix,'_Chr_', i, '/',fileNoSuffix, '_Chr_', i, '_Rainbow_Plot.pdf'))
+    
+    plot(sample.CNVs.2, axes = FALSE, y = rep(0.1, dim(sample.CNVs.2)[1]),
+         xlim = range(as.numeric(na.omit(sample.SNPs))), 
+         ylim = c(1, max(as.numeric(na.omit((ceiling(log10(SNP.CNV.dist))))))), col = 2, cex = 1.25)
+    
+    points(log10(SNP.CNV.dist) ~ sample.SNPs)
+    abline(v = apply(sample.CNVs.2, 1, mean), lty = 2, col =3, lwd = 1.5)
+    
+    # Rainbow Plot X-axis
+    axis(1, at = 2*0:10*max_distance, label = as.character(2*0:10), font = 1)  
+    
+    # Rainbow Plot Y-axis
+    axis(2, at = 0:max(as.numeric(na.omit((ceiling(log10(SNP.CNV.dist)))))), labels = c(1, sapply(1:max(as.numeric(na.omit((ceiling(log10(SNP.CNV.dist)))))), function(i) as.expression(bquote(10^ .(i))))))  # y-axis
+    
+    # Rainbow Plot Label on X-axis
+    mtext(1, text = paste("Chromosome Position (", max_distance, "bp)", sep=""), cex = 1.2, line = 3)
+    
+    # Rainbow Plot Label on Y-axis
+    mtext(2, text = "Distance from SNPs to closest CNV (bp)", cex = 1.2, line = 2.5)
+    
+    # Rainbow Plot Title
+    title(main = paste0(fileNoSuffix,"_Chr_", i))
+
+    dev.off()
+    
+    ############################################################
+    #Stage 3.3 J Function Plot and Test for SNP-CNV Association#
+    ############################################################
+    
+    # Set up sequence of grid points for SNP-CNV association test
+    r_use_1 <- 1 : (max_distance/interval_distance) * interval_distance
+
+    # Directory for the output plots and statistics file to be saved
+    save.directory.SNP.CNV <- paste0(output_directory,'/',fileNoSuffix,'/',fileNoSuffix,'_Chr_', i, '/')
+    
+    # SNP-CNV Association RData file name 
+    file.name.SNP.CNV <- paste0(fileNoSuffix,"_Chr_",i, "_SNP-CNV_Association")
+
+    # Set seed for reproducibility
+    set.seed(seed)
+    test.result.SNP.CNV <- SNP.CNV.test(sample.SNPs = sample.SNPs, sample.probe = sample.probe, sample.CNVs = sample.CNVs.2, r_p = r_use_1, n.rep = numRuns, alpha = alpha)
+
+    # Save the object test.result.SNP.CNV as the SNP-CNV Association RData file
+    save(test.result.SNP.CNV, file = paste(save.directory.SNP.CNV, file.name.SNP.CNV, ".RData", sep = ""))
+    
+    # Load the SNP-CNV Association RData file
+    load(, file = paste(save.directory.SNP.CNV, file.name.SNP.CNV, ".RData", sep = ""))
+
+    # Negative association, larger value, tend to be farther away
+    # Positive association, smaller value, tend to be close together
+
+    # J-function Plot
+    pdf(file=paste0(output_directory, '/',fileNoSuffix,'/',fileNoSuffix,'_Chr_', i, '/', fileNoSuffix,'_Chr_',i,'_J-statistic_Plot.pdf'))
+    plot.upper <- max(c(test.result.SNP.CNV$sample.info[["J.fun.sample"]], test.result.SNP.CNV$Null.output[["gcb.upper"]]), na.rm =  T) + 0.01
+    plot.lower <- min(c(test.result.SNP.CNV$sample.info[["J.fun.sample"]], test.result.SNP.CNV$Null.output[["gcb.lower"]]), na.rm = T) - 0.01
+    plot(test.result.SNP.CNV$sample.info[["J.fun.sample"]] ~ r_use_1, type = 'l', ylim = c(plot.lower, plot.upper), lwd = 2, xlab = 'r', ylab = 'J function', main = "J function")
+    lines(test.result.SNP.CNV$Null.output[["gcb.upper"]] ~ r_use_1, lty = 2, lwd = 2, col = 4)
+    lines(test.result.SNP.CNV$Null.output[["gcb.lower"]] ~ r_use_1, lty = 2, lwd = 2, col = 4)
+    legend("topleft", c("Observed J Function", "Global Confidence Bands"), lty = c(1,2), lwd = c(2,2), col = c(1, 4), cex=0.5)
+
+    dev.off()
+
+    # J-statistic association symbols
+    # +- : J function crossed both high and low global confidence bands
+    # +  : J function crossed low global confidence band
+    # -  : J function crossed high global confidence band
+    # /  : J function did not cross either high and low global confidence bands
+    graphLinePoints <- test.result.SNP.CNV$sample.info[["J.fun.sample"]]
+    graphUpperPoints <- test.result.SNP.CNV$Null.output[["gcb.upper"]]
+    graphLowerPoints <- test.result.SNP.CNV$Null.output[["gcb.lower"]]
+    
+    if ((any(graphLinePoints[-1:-100] >graphUpperPoints[-1:-100])) &
+        (any(graphLinePoints[-1:-100] <graphLowerPoints[-1:-100]))){
+      association<-'+-'
+
+    } else if (any(graphLinePoints[-1:-100] <graphLowerPoints[-1:-100])){
+      association<-'+'
+    } else if (any(graphLinePoints[-1:-100] >graphUpperPoints[-1:-100])){
+      association<-'-'
+    } else {
+      association<-'/'  # \ is special character, need 2 to produce 1 in end 
+    }
+    
+    #if unadjusted P-value of J-statistic is greater than alpha, no association between SNPs and CNVs
+    if ((as.numeric(test.result.SNP.CNV$test.result)[1])>alpha){
+      association<-'/'
+    }
+
+    # Output statistical results of KS (SNP cluster existence) and J-statistic (SNP-CNV association) tests to file, one output text file per chromosome per sample 
+    chars <- capture.output(cat(fileNoSuffix,'Chromosome',i,sep='\n'),print(test.result.SNP$test.result), print(test.result.SNP.CNV$test.result),
+                            cat('numCNVs',numberCNVs, sep='\n'), cat('Association',association,sep='\n'))    
+    writeLines(chars, con = file(paste0(output_directory, '/', fileNoSuffix,'/',fileNoSuffix,'_Chr_', i, '/', fileNoSuffix,'_Chr_',i,'_Stats.txt')))
+    
+    # Add statistical results to summary statistics dataframe
+    excel_table[i,]<-c(i, (as.numeric(test.result.SNP$test.result)[1]), (as.numeric(test.result.SNP.CNV$test.result)[1]), numberCNVs,association, fileNoSuffix)
+    closeAllConnections()
+    
   }
-  
+
   # Merge summary statistics dataframe for each sample into one combined dataframe for all samples  
   colnames(excel_table)<- c('Chromosome', 'p.KS', 'p.J', 'Num_CNV', 'SNP_CNV_Association', 'Sample')
   rownames(excel_table)<-NULL
@@ -452,13 +431,6 @@ for (file in list.files(path=output_directory, pattern=".csv", all.files=TRUE, f
   # Update Stage 3 progress bar 
   stage_3_pb_counter = stage_3_pb_counter + 1
   setTxtProgressBar(stage_3_pb, stage_3_pb_counter)
-  
-  # Record time
-  end.time <- Sys.time()
-  time.taken <- end.time - start.time
-  print(time.taken)
-  memory_usage = gc()
-  print(memory_usage)
 }
 
 close(stage_3_pb)
