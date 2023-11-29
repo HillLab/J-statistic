@@ -137,7 +137,7 @@ The example input data found at `./example/input` includes one SNP data file (`.
 ```sh
 cd [Directory where J-statistic.R is located]
 
-Rscript J_statistic.R --snp ./example/input/example_SNP.csv --cnv ./example/input/example_CNV.csv --output ./example/output
+Rscript J_statistic.R --snp_file ./example/input/example_SNP.csv --cnv_file ./example/input/example_CNV.csv --output_dir ./example/output
 ```
 
 ## Example Use Cases
