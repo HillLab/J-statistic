@@ -44,19 +44,19 @@ install_github("cvarrichio/rowr")
 
 Summary of the different arguments that `J-statistic.R` uses as input. The script will output summary statistics for each chromosome of each individual microarray, along with Rainbow plots, Rainfall plots, and J function plots. Using the long-form arguments when running the `J-statistic.R` in a terminal is highly recommended. 
 
-Short-Form Argument Name| Long-Form Argument Name| Argument Type | Argument Description | Argument Range 
---- | --- | --- | --- | ---
--s | --snp_file | Character | Absolute file path of SNP calls (CSV file) | User-specified file path
--c | --cnv_file | Character | Absolute file path of CNV calls (CSV file) | User-specified file path
--o | --output_dir | Character | Absolute file path of output directory | User-specified file path
--r | --nrun | Integer | Number of bootstrap simulations |  Default:1000 ; Recommended Range: 1000-10000
--h | --min_snp | Integer | Minimum number of SNPs |  Default:10 ; Recommended Range: 10-100
--z | --seed | Integer | Number of bootstrap simulations |  Default:12345
--m | --assocation_max_distance | Integer | Maximum distance between SNPs and CNVs to test association between SNPs and CNVs. | Default:10000000; Recommended Range: 1000000-50000000
--i | --association_interval_distance | Integer | Interval step size to test association between SNPs and CNVs. | Default: 5000; Recommended Range: 1000-10000
--n | --cluster_max_distance | Integer | Maximum distance between SNPs to test for existence of SNP clusters. | Default:100000; Recommended Range: 10000-500000
--j | --cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
--a | --alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
+Long-Form Argument Name| Argument Type | Argument Description | Argument Range 
+--- | --- | --- | ---
+--snp_file | Character | Absolute file path of SNP calls (CSV file) | User-specified file path
+--cnv_file | Character | Absolute file path of CNV calls (CSV file) | User-specified file path
+--output_dir | Character | Absolute file path of output directory | User-specified file path
+--nrun | Integer | Number of bootstrap simulations |  Default:1000 ; Recommended Range: 1000-10000
+--min_snp | Integer | Minimum number of SNPs |  Default:10 ; Recommended Range: 10-100
+--seed | Integer | Number of bootstrap simulations |  Default:12345
+--assocation_max_distance | Integer | Maximum distance between SNPs and CNVs to test association between SNPs and CNVs. | Default:10000000; Recommended Range: 1000000-50000000
+--association_interval_distance | Integer | Interval step size to test association between SNPs and CNVs. | Default: 5000; Recommended Range: 1000-10000
+--cluster_max_distance | Integer | Maximum distance between SNPs to test for existence of SNP clusters. | Default:100000; Recommended Range: 10000-500000
+--cluster_interval_distance | Integer | Interval step size to test for existence of SNP clusters. | Default: 5000; Recommended Range: 1000-10000
+--alpha | Float | Alpha value for significance threshold of statical tests. | Default: 0.05; Recommended Range: 0.01-0.10
 
 The `--max_distance` and `--interval_distance` parameters set the maximum distance and step size to test for existence of SNP clustering and SNP-CNV association. Shown below is a visualization of different `--max_distance` and `--interval_distance` parameters. 
 
